@@ -1,0 +1,4 @@
+﻿  TutorialGame.cpp
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
+  GameTech.vcxproj -> C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\Win32\Debug\GameTech.exe
