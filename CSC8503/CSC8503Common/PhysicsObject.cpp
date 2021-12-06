@@ -9,7 +9,7 @@ PhysicsObject::PhysicsObject(Transform* parentTransform, const CollisionVolume* 
 	volume		= parentVolume;
 
 	inverseMass = 1.0f;
-	elasticity	= 0.8f;
+	elasticity	= 0.66f;
 	friction	= 0.8f;
 }
 
@@ -18,9 +18,6 @@ PhysicsObject::~PhysicsObject()	{
 }
 
 void PhysicsObject::ApplyAngularImpulse(const Vector3& force) {
-	if (force.Length() > 0) {
-		bool a = true;
-	}
 	angularVelocity += inverseInteriaTensor * force;
 }
 
@@ -60,9 +57,9 @@ void PhysicsObject::InitCubeInertia() {
 	inverseInertia.z = (12.0f * inverseMass) / (dimsSqr.x + dimsSqr.y);
 }
 
-void PhysicsObject::InitSphereInertia() {
+void PhysicsObject::InitSphereInertia(bool hollow) {
 	float radius	= transform->GetScale().GetMaxElement();
-	float i			= 2.5f * inverseMass / (radius*radius);
+	float i			= hollow ? 1.5f * inverseMass / (radius * radius) : 2.5f * inverseMass / (radius*radius); //I = 2/3 M r^2
 
 	inverseInertia	= Vector3(i, i, i);
 }
