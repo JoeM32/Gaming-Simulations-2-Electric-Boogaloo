@@ -139,6 +139,8 @@
     <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="NavigationPath.h" />
     <ClInclude Include="OBBVolume.h" />
+    <ClInclude Include="PositionConstraint.h" />
+    <ClInclude Include="RotationConstraint.h" />
     <ClInclude Include="SphereVolume.h" />
     <ClInclude Include="CollisionVolume.h" />
     <ClInclude Include="CollisionDetection.h" />
@@ -167,10 +169,12 @@
     <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="PositionConstraint.cpp" />
     <ClCompile Include="PushdownMachine.cpp" />
     <ClCompile Include="PushdownState.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="RenderObject.cpp" />
+    <ClCompile Include="RotationConstraint.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateTransition.cpp" />
     <ClCompile Include="Transform.cpp" />

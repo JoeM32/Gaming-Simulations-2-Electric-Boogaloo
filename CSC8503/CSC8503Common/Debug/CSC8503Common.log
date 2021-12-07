@@ -1,20 +1,16 @@
-﻿  CollisionDetection.cpp
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293: '<<': shift count negative or too big, undefined behavior
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293: '<<': shift count negative or too big, undefined behavior
-  GameObject.cpp
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293: '<<': shift count negative or too big, undefined behavior
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293: '<<': shift count negative or too big, undefined behavior
-  GameWorld.cpp
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293: '<<': shift count negative or too big, undefined behavior
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293: '<<': shift count negative or too big, undefined behavior
+﻿  GameWorld.cpp
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
   PhysicsObject.cpp
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293: '<<': shift count negative or too big, undefined behavior
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293: '<<': shift count negative or too big, undefined behavior
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
   PhysicsSystem.cpp
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293: '<<': shift count negative or too big, undefined behavior
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293: '<<': shift count negative or too big, undefined behavior
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
+  PositionConstraint.cpp
   QuadTree.cpp
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293: '<<': shift count negative or too big, undefined behavior
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293: '<<': shift count negative or too big, undefined behavior
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(44,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
+  RotationConstraint.cpp
   Generating Code...
-  CSC8503Common.vcxproj -> C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\Win32\Debug\CSC8503Common.lib
+C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\CollisionDetection.h(45,1): warning C4293:  '<<': shift count negative or too big, undefined behavior
+  CSC8503Common.vcxproj -> C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\Win32\Debug\CSC8503Common.lib

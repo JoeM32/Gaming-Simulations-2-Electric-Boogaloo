@@ -73,6 +73,7 @@ namespace NCL {
 				return worldID;
 			}
 
+
 		protected:
 			Transform			transform;
 
@@ -85,6 +86,7 @@ namespace NCL {
 			string	name;
 
 			Vector3 broadphaseAABB;
+
 		};
 	}
 }

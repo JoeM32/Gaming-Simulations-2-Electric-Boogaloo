@@ -54,6 +54,8 @@ namespace NCL {
 			int numCollisionFrames	= 5;
 
 			float linearDamping = 0.4f;
+
+			std::set <CollisionDetection::CollisionInfo > broadphaseCollisions;
 		};
 	}
 }
