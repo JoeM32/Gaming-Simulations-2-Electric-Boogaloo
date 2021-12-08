@@ -4,41 +4,34 @@
 
 using namespace NCL::CSC8503;
 
+float Dot(const Vector3& a, const Vector3& b) {
+	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+}
+
 void RotationConstraint::UpdateConstraint(float dt) {
-	Vector3 relativeRot =
-		objectA->GetTransform().GetOrientation().ToEuler() -
-		objectB->GetTransform().GetOrientation().ToEuler();
 
-	float currentAngle = relativeRot.Length();
+	PhysicsObject* physA = objectA->GetPhysicsObject();
+	PhysicsObject* physB = objectB->GetPhysicsObject();
+	float alignment = Dot(objectA->GetTransform().GetOrientation() * Vector3(0,1,0), objectB->GetTransform().GetOrientation() * Vector3(0, 1, 0));
 
-	float offset = rotation - currentAngle;
-	if (abs(offset) > 0.0f) {
-		Vector3 offsetDir = relativeRot.Normalised();
+	Vector3 average = (objectA->GetTransform().GetOrientation().ToEuler() + objectB->GetTransform().GetOrientation().ToEuler()) / 2.0f;
+	
+	//std::cout << objectA->GetTransform().GetOrientation().ToEuler() << objectB->GetTransform().GetOrientation().ToEuler() << "\n";
 
-		PhysicsObject* physA = objectA->GetPhysicsObject();
-		PhysicsObject* physB = objectB->GetPhysicsObject();
 
-		Vector3 relativeAngularVelocity = physA->GetAngularVelocity() -
-			physB->GetAngularVelocity();
+	if (abs(alignment) > rotation)
+	{
+
+		Vector3 correction = objectA->GetTransform().GetOrientation().ToEuler() - average;
+		float biasFactor = 0.01f;
+		float bias = (biasFactor / dt) * abs(alignment);
 
 		float constraintMass = physA->GetInverseMass() +
 			physB->GetInverseMass();
 
-		if (constraintMass > 0.0f) {
-			//how much of their relative force is affecting the constraint
-			float velocityDot = Vector3::Dot(relativeAngularVelocity, offsetDir);
-			float biasFactor = 0.01f;
-			float bias = -(biasFactor / dt) * offset;
+		Vector3 correctionImpulse = (correction * bias) / constraintMass;
 
-			float lambda = -(velocityDot + bias) / constraintMass;
-			Vector3 aImpulse = offsetDir * lambda;
-			Vector3 bImpulse = -offsetDir * lambda;
-
-			physA->ApplyAngularImpulse(aImpulse);// multiplied by mass here
-			physB->ApplyAngularImpulse(bImpulse);// multiplied by mass here
-
-		}
-
+		physA->ApplyAngularImpulse(correctionImpulse);
+		physB->ApplyAngularImpulse(-correctionImpulse);
 	}
-
 }

@@ -11,7 +11,6 @@ namespace NCL {
 				objectA = a;
 				objectB = b;
 				rotation = d;
-
 			}
 			~RotationConstraint() {}
 
@@ -21,7 +20,7 @@ namespace NCL {
 			GameObject* objectA;
 			GameObject* objectB;
 
-			float rotation;
+			float rotation = 0;
 		};
 	}
 }

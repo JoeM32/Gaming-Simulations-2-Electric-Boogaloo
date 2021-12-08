@@ -261,7 +261,7 @@ void TutorialGame::BridgeConstraintTest() {
 	float invCubeMass = 5; //how heavy the middle pieces are
 	int numLinks = 10;
 	float maxDistance = 30; // constraint distance
-	float maxAngle = 30; // constraint angle
+	float maxAngle = 0; // constraint angle
 	float cubeDistance = 20; // distance between links
 
 	Vector3 startPos = Vector3(500, 500, 500);
