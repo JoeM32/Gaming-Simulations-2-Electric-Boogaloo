@@ -19,12 +19,15 @@ namespace NCL {
 	class CollisionDetection
 	{
 	public:
+
 		struct ContactPoint {
 			Vector3 localA;
 			Vector3 localB;
 			Vector3 normal;
 			float	penetration;
 		};
+
+
 		struct CollisionInfo {
 			GameObject* a;
 			GameObject* b;		
@@ -57,6 +60,7 @@ namespace NCL {
 				return false;
 			}
 		};
+
 
 		static bool SphereCapsuleIntersection(
 			const CapsuleVolume& volumeA, const Transform& worldTransformA,

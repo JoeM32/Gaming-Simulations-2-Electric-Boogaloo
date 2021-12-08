@@ -333,6 +333,8 @@ void PhysicsSystem::BroadPhase() {
 		Vector3 pos = (*i)->GetTransform().GetPosition();
 		tree.Insert(*i, pos, halfSizes);
 	}
+
+
 	tree.OperateOnContents(
 		[&](std::list <QuadTreeEntry <GameObject*>>& data) {
 			CollisionDetection::CollisionInfo info;
