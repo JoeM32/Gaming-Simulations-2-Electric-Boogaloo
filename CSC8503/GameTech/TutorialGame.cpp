@@ -247,7 +247,7 @@ void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
 	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
-	//world->GetMainCamera()->SetPosition(Vector3(500, 500, 500));
+	world->GetMainCamera()->SetPosition(Vector3(500, 500, 500));
 	lockedObject = nullptr;
 }
 
@@ -258,7 +258,8 @@ void TutorialGame::InitWorld() {
 	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	InitGameExamples();
 	InitDefaultFloor();
-	//BridgeConstraintTest();
+
+	BridgeConstraintTest();
 
 	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 

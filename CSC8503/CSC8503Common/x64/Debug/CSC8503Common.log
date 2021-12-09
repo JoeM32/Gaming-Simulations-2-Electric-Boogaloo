@@ -1,1 +1,26 @@
-﻿
+﻿  BehaviourAction.cpp
+  BehaviourNode.cpp
+  BehaviourNodeWithChildren.cpp
+  BehaviourSelector.cpp
+  BehaviourSequence.cpp
+  CollisionDetection.cpp
+  Debug.cpp
+  GameObject.cpp
+  GameWorld.cpp
+  NavigationGrid.cpp
+  NavigationMesh.cpp
+  PhysicsObject.cpp
+  PhysicsSystem.cpp
+  PositionConstraint.cpp
+  PushdownMachine.cpp
+  PushdownState.cpp
+  QuadTree.cpp
+  RenderObject.cpp
+  RotationConstraint.cpp
+  StateMachine.cpp
+  Generating Code...
+  Compiling...
+  StateTransition.cpp
+  Transform.cpp
+  Generating Code...
+  CSC8503Common.vcxproj -> C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\CSC8503Common.lib
