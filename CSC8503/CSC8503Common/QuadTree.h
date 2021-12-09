@@ -112,7 +112,7 @@ namespace NCL {
 				delete[] children;
 			}
 
-
+		protected:
 
 			std::list< QuadTreeEntry<T> >	contents;
 

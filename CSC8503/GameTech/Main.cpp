@@ -332,13 +332,13 @@ int main() {
 	w->ShowOSPointer(false);
 	w->LockMouseToWindow(true);
 
-	TestPushdownAutomata(w);
+	//TestPushdownAutomata(w);
 
-	TestStateMachine();
+	//TestStateMachine();
 
-	TestPathfinding();
+	//TestPathfinding();
 
-	TestBehaviourTree();
+	//TestBehaviourTree();
 
 	TutorialGame* g = new TutorialGame();
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
