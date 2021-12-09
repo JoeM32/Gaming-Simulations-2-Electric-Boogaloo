@@ -171,11 +171,20 @@ void PhysicsSystem::UpdateCollisionList() {
 }
 
 void PhysicsSystem::UpdateObjectAABBs() {
+	std::vector <GameObject*>::const_iterator first;
+	std::vector <GameObject*>::const_iterator last;
+	gameWorld.GetObjectIterators(first, last);
+	for (auto i = first; i != last; ++i) {
+		(*i)->UpdateBroadphaseAABB();
+	}
+
+	/*
 	gameWorld.OperateOnContents(
 		[](GameObject* g) {
 			g->UpdateBroadphaseAABB();
 		}
 	);
+	*/
 }
 
 /*
@@ -195,17 +204,14 @@ void PhysicsSystem::BasicCollisionDetection() {
 	for (auto i = first; i != last; ++i) {
 		if ((*i)->GetPhysicsObject() == nullptr) {
 			continue;
-
 		}
 		for (auto j = i + 1; j != last; ++j) {
 			if ((*j)->GetPhysicsObject() == nullptr) {
 				continue;
-
 			}
 			CollisionDetection::CollisionInfo info;
 			if (CollisionDetection::ObjectIntersection(*i, *j, info)) {
-				std::cout << "Collision between " << (*i)->GetName()
-					<< " and " << (*j)->GetName() << std::endl;
+				std::cout << "Collision between " << (*i)->GetName() << " and " << (*j)->GetName() << std::endl;
 				ImpulseResolveCollision(*info.a, *info.b, info.point);
 				info.framesLeft = numCollisionFrames;
 				allCollisions.insert(info);
@@ -221,7 +227,6 @@ so that objects separate back out.
 
 */
 void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, CollisionDetection::ContactPoint& p) const {
-
 	PhysicsObject* physA = a.GetPhysicsObject();
 	PhysicsObject* physB = b.GetPhysicsObject();
 
@@ -231,75 +236,41 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 	float totalMass = physA->GetInverseMass() + physB->GetInverseMass();
 
 	if (totalMass == 0) {
-		return; //two static objects ??
-
+		return;//two static objects ??
 	}
 
 	// Separate them out using projection
-	transformA.SetPosition(transformA.GetPosition() -
-		(p.normal * p.penetration * (physA->GetInverseMass() / totalMass)));
-
-	transformB.SetPosition(transformB.GetPosition() +
-		(p.normal * p.penetration * (physB->GetInverseMass() / totalMass)));
+	transformA.SetPosition(transformA.GetPosition() - (p.normal * p.penetration * (physA->GetInverseMass() / totalMass)));
+	transformB.SetPosition(transformB.GetPosition() + (p.normal * p.penetration * (physB->GetInverseMass() / totalMass)));
 
 	Vector3 relativeA = p.localA;
 	Vector3 relativeB = p.localB;
 
-	Vector3 angVelocityA =
-		Vector3::Cross(physA->GetAngularVelocity(), relativeA);
-	Vector3 angVelocityB =
-		Vector3::Cross(physB->GetAngularVelocity(), relativeB);
-
+	Vector3 angVelocityA = Vector3::Cross(physA->GetAngularVelocity(), relativeA);
+	Vector3 angVelocityB = Vector3::Cross(physB->GetAngularVelocity(), relativeB);
+	
 	Vector3 fullVelocityA = physA->GetLinearVelocity() + angVelocityA;
 	Vector3 fullVelocityB = physB->GetLinearVelocity() + angVelocityB;
 
 	Vector3 contactVelocity = fullVelocityB - fullVelocityA;
+
 	float impulseForce = Vector3::Dot(contactVelocity, p.normal);
 
 	//now to work out the effect of inertia ....
-	Vector3 inertiaA = Vector3::Cross(physA->GetInertiaTensor() *
-		Vector3::Cross(relativeA, p.normal), relativeA);
-	Vector3 inertiaB = Vector3::Cross(physB->GetInertiaTensor() *
-		Vector3::Cross(relativeB, p.normal), relativeB);
+	Vector3 inertiaA = Vector3::Cross(physA->GetInertiaTensor()* Vector3::Cross(relativeA, p.normal), relativeA);
+	Vector3 inertiaB = Vector3::Cross(physB->GetInertiaTensor()* Vector3::Cross(relativeB, p.normal), relativeB);
+
 	float angularEffect = Vector3::Dot(inertiaA + inertiaB, p.normal);
+	float cRestitution = 0.66f; // disperse some kinectic energy
 
-	float cRestitution = physA->GetElasticity() > physB->GetElasticity() ? physB->GetElasticity() : physA->GetElasticity(); // disperse some kinectic energy
-
-	float j = (-(1.0f + cRestitution) * impulseForce) /
-		(totalMass + angularEffect);
+	float j = (-(1.0f + cRestitution) * impulseForce) / (totalMass + angularEffect);
 
 	Vector3 fullImpulse = p.normal * j;
-
 	physA->ApplyLinearImpulse(-fullImpulse);
 	physB->ApplyLinearImpulse(fullImpulse);
 
 	physA->ApplyAngularImpulse(Vector3::Cross(relativeA, -fullImpulse));
-
 	physB->ApplyAngularImpulse(Vector3::Cross(relativeB, fullImpulse));
-
-}
-
-void NCL::CSC8503::PhysicsSystem::ResolveSpringCollision(GameObject& a, GameObject& b, CollisionDetection::ContactPoint& p) const
-{
-	PhysicsObject* physA = a.GetPhysicsObject();
-	PhysicsObject* physB = b.GetPhysicsObject();
-
-	Transform& transformA = a.GetTransform();
-	Transform& transformB = b.GetTransform();
-
-	float totalMass = physA->GetInverseMass() + physB->GetInverseMass();
-
-	if (totalMass == 0) {
-		return; //two static objects ??
-
-	}
-
-	float springConstant = 1;
-
-	float force = -springConstant * p.penetration;
-
-	physA->AddForceAtPosition(p.normal.Normalised() * force, p.localA);
-	physB->AddForceAtPosition(p.normal.Normalised() * -force, p.localB);
 }
 
 /*
@@ -312,7 +283,31 @@ compare the collisions that we absolutely need to.
 */
 
 void PhysicsSystem::BroadPhase() {
+	broadphaseCollisions.clear();
+	QuadTree <GameObject*> tree(Vector2(1024, 1024), 7, 6);
 
+	std::vector <GameObject*>::const_iterator first;
+	std::vector <GameObject*>::const_iterator last;
+	gameWorld.GetObjectIterators(first, last);
+	for (auto i = first; i != last; ++i) {
+		Vector3 halfSizes;
+		if (!(*i)->GetBroadphaseAABB(halfSizes)) { continue; }
+		Vector3 pos = (*i)->GetTransform().GetPosition();
+		tree.Insert(*i, pos, halfSizes);
+	}
+	tree.OperateOnContents(
+		[&](std::list <QuadTreeEntry <GameObject*>>& data) {
+			CollisionDetection::CollisionInfo info;
+			for (auto i = data.begin(); i != data.end(); ++i) {
+				for (auto j = std::next(i); j != data.end(); ++j) {
+					//is this pair of items already in the collision set -
+					//if the same pair is in another quadtree node together etc
+					info.a = min((*i).object, (*j).object);
+					info.b = max((*i).object, (*j).object);
+					broadphaseCollisions.insert(info);
+				}
+			}
+		});
 }
 
 /*
@@ -321,7 +316,15 @@ The broadphase will now only give us likely collisions, so we can now go through
 and work out if they are truly colliding, and if so, add them into the main collision list
 */
 void PhysicsSystem::NarrowPhase() {
-
+	for (std::set <CollisionDetection::CollisionInfo >::iterator i = broadphaseCollisions.begin();
+		i != broadphaseCollisions.end(); ++i) {
+		CollisionDetection::CollisionInfo info = *i;
+		if (CollisionDetection::ObjectIntersection(info.a, info.b, info)) {
+			info.framesLeft = numCollisionFrames;
+			ImpulseResolveCollision(*info.a, *info.b, info.point);
+			allCollisions.insert(info); // insert into our main set
+		}
+	}
 }
 
 /*
@@ -342,7 +345,6 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 		PhysicsObject* object = (*i)->GetPhysicsObject();
 		if (object == nullptr) {
 			continue; //No physics object for this GameObject!
-
 		}
 		float inverseMass = object->GetInverseMass();
 
@@ -352,9 +354,7 @@ void PhysicsSystem::IntegrateAccel(float dt) {
 
 		if (applyGravity && inverseMass > 0) {
 			accel += gravity; //don’t move infinitely heavy things
-
 		}
-
 		linearVel += accel * dt; // integrate accel!
 		object->SetLinearVelocity(linearVel);
 
@@ -380,13 +380,13 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 	std::vector <GameObject*>::const_iterator first;
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
-	float frameLinearDamping = 1.0f - (linearDamping * dt);
+
+	float frameLinearDamping = 1.0f - (0.4f * dt);
 
 	for (auto i = first; i != last; ++i) {
 		PhysicsObject* object = (*i)->GetPhysicsObject();
 		if (object == nullptr) {
 			continue;
-
 		}
 		Transform& transform = (*i)->GetTransform();
 		// Position Stuff
@@ -398,11 +398,11 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 		linearVel = linearVel * frameLinearDamping;
 		object->SetLinearVelocity(linearVel);
 
+		// Orientation Stuff
 		Quaternion orientation = transform.GetOrientation();
 		Vector3 angVel = object->GetAngularVelocity();
 
-		orientation = orientation +
-			(Quaternion(angVel * dt * 0.5f, 0.0f) * orientation);
+		orientation = orientation + (Quaternion(angVel * dt * 0.5f, 0.0f) * orientation);
 		orientation.Normalise();
 
 		transform.SetOrientation(orientation);

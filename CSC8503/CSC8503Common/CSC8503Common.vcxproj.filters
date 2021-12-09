@@ -25,6 +25,9 @@
     <Filter Include="Pathfinding">
       <UniqueIdentifier>{84f869c2-c73b-4eb0-ace4-ff4d685ef4ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Behaviour Tree">
+      <UniqueIdentifier>{09ae0f1a-3ee2-4923-b1f4-2308e697bc5d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameWorld.h">
@@ -102,6 +105,24 @@
     <ClInclude Include="CapsuleVolume.h">
       <Filter>CollisionDetection</Filter>
     </ClInclude>
+    <ClInclude Include="PositionConstraint.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourNode.h">
+      <Filter>Behaviour Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourNodeWithChildren.h">
+      <Filter>Behaviour Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourSelector.h">
+      <Filter>Behaviour Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourSequence.h">
+      <Filter>Behaviour Tree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourAction.h">
+      <Filter>Behaviour Tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameWorld.cpp">
@@ -148,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="QuadTree.cpp">
       <Filter>CollisionDetection</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionConstraint.cpp">
+      <Filter>Physics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

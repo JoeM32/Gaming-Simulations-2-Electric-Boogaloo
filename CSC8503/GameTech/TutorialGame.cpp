@@ -4,6 +4,7 @@
 #include "../../Plugins/OpenGLRendering/OGLShader.h"
 #include "../../Plugins/OpenGLRendering/OGLTexture.h"
 #include "../../Common/TextureLoader.h"
+#include "../CSC8503Common/PositionConstraint.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -84,6 +85,10 @@ void TutorialGame::UpdateGame(float dt) {
 	SelectObject();
 	MoveSelectedObject();
 	physics->Update(dt);
+
+	if (testStateObject) {
+		testStateObject->Update(dt);
+	}
 
 	if (lockedObject != nullptr) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
@@ -237,6 +242,7 @@ void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
 	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
+	//world->GetMainCamera()->SetPosition(Vector3(500, 500, 500));
 	lockedObject = nullptr;
 }
 
@@ -247,11 +253,33 @@ void TutorialGame::InitWorld() {
 	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	InitGameExamples();
 	InitDefaultFloor();
+	BridgeConstraintTest();//here
+	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));//here
 }
 
 void TutorialGame::BridgeConstraintTest() {
+	Vector3 cubeSize = Vector3(8, 8, 8);
 
+	float invCubeMass = 5; //how heavy the middle pieces are
+	int numLinks = 10;
+	float maxDistance = 30; // constraint distance
+	float cubeDistance = 20; // distance between links
 
+	Vector3 startPos = Vector3(500,500,500);
+
+	GameObject* start = AddCubeToWorld(startPos + Vector3(0, 0, 0), cubeSize, 0);
+	GameObject* end = AddCubeToWorld(startPos + Vector3((numLinks + 2) * cubeDistance, 0, 0), cubeSize, 0);
+
+	GameObject* previous = start;
+
+	for (int i = 0; i < numLinks; ++i) {
+		GameObject* block = AddCubeToWorld(startPos + Vector3((i + 1) * cubeDistance, 0, 0), cubeSize, invCubeMass);
+		PositionConstraint* constraint = new PositionConstraint(previous, block, maxDistance);
+		world->AddConstraint(constraint);
+		previous = block;
+	}
+	PositionConstraint* constraint = new PositionConstraint(previous, end, maxDistance);
+	world->AddConstraint(constraint);
 }
 
 /*
@@ -288,7 +316,7 @@ physics worlds. You'll probably need another function for the creation of OBB cu
 
 */
 GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
-	GameObject* sphere = new GameObject("Sphere");
+	GameObject* sphere = new GameObject();
 
 	Vector3 sphereSize = Vector3(radius, radius, radius);
 	SphereVolume* volume = new SphereVolume(radius);
@@ -310,7 +338,7 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 }
 
 GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float halfHeight, float radius, float inverseMass) {
-	GameObject* capsule = new GameObject("Capsule");
+	GameObject* capsule = new GameObject();
 
 	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius);
 	capsule->SetBoundingVolume((CollisionVolume*)volume);
@@ -326,8 +354,6 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float halfH
 	capsule->GetPhysicsObject()->InitCubeInertia();
 
 	world->AddGameObject(capsule);
-
-	
 
 	return capsule;
 
@@ -374,7 +400,6 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
 
 			if (rand() % 2) {
-				cubeDims.y = rand() % 3 + 0.2f;
 				AddCubeToWorld(position, cubeDims);
 			}
 			else {
@@ -479,6 +504,27 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	return apple;
 }
 
+StateGameObject* NCL::CSC8503::TutorialGame::AddStateObjectToWorld(const Vector3& position)
+{
+	StateGameObject* apple = new StateGameObject();
+
+	SphereVolume* volume = new SphereVolume(0.25f);
+	apple->SetBoundingVolume((CollisionVolume*)volume);
+	apple->GetTransform()
+		.SetScale(Vector3(0.25, 0.25, 0.25))
+		.SetPosition(position);
+
+	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), bonusMesh, nullptr, basicShader));
+	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
+
+	apple->GetPhysicsObject()->SetInverseMass(1.0f);
+	apple->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(apple);
+
+	return apple;
+}
+
 /*
 
 Every frame, this code will let you perform a raycast, to see if there's an object
@@ -546,21 +592,6 @@ bool TutorialGame::SelectObject() {
 
 	}
 
-	if (selectionObject && Window::GetKeyboard()->KeyPressed(NCL::KeyboardKeys::Z)) {
-
-		//fire raycast from objects forward position
-		//std::cout << "Firing Ray";
-		//Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetOrientation().ToEuler() * 500 + selectionObject->GetTransform().GetPosition(), Vector4(0, 1, 0, 1), 10.0f);
-		Ray ray = Ray(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetOrientation() * Vector3(0, 0, -100));
-		RayCollision closestCollision;
-		if (world->Raycast(ray, closestCollision, true)) {
-			auto object = (GameObject*)closestCollision.node;
-			std::cout << "Hit: " << object->GetName() << "\n";
-		}
-		//Debug::DrawLine(selectionObject->GetTransform().GetPosition(), selectionObject->GetTransform().GetOrientation() * Vector3(0, 0, -100) + selectionObject->GetTransform().GetPosition(), Vector4(0, 1, 0, 1), 10.0f);
-	
-	}
-
 	return false;
 }
 
@@ -571,29 +602,20 @@ added linear motion into our physics system. After the second tutorial, objects 
 line - after the third, they'll be able to twist under torque aswell.
 */
 void TutorialGame::MoveSelectedObject() {
-	renderer->DrawString("Click Force:" + std::to_string(forceMagnitude),
-		Vector2(10, 20)); //Draw debug text at 10,20
+	renderer->DrawString("Click Force:" + std::to_string(forceMagnitude), Vector2(10, 20)); //Draw debug text at 10,20
+
 	forceMagnitude += Window::GetMouse()->GetWheelMovement() * 100.0f;
+	if (!selectionObject) { return; }
 
-	if (!selectionObject) {
-		return;//we haven’t selected anything!
-
-	}
 	//Push the selected object!
 	if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
-		Ray ray = CollisionDetection::BuildRayFromMouse(
-			*world->GetMainCamera());
+		Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
 		RayCollision closestCollision;
 		if (world->Raycast(ray, closestCollision, true)) {
-			/*if (closestCollision.node == selectionObject) {
-				selectionObject->GetPhysicsObject()->
-					AddForce(ray.GetDirection() * forceMagnitude);
-			}*/
 			if (closestCollision.node == selectionObject) {
 				selectionObject->GetPhysicsObject()->AddForceAtPosition(
 					ray.GetDirection() * forceMagnitude,
 					closestCollision.collidedAt);
-
 			}
 		}
 	}

@@ -39,15 +39,6 @@ namespace NCL {
 				return inverseMass;
 			}
 
-			float GetElasticity() const {
-				return elasticity;
-			}
-
-			void SetElasticity(float elasticity)
-			{
-				this->elasticity = elasticity;
-			}
-
 			void ApplyAngularImpulse(const Vector3& force);
 			void ApplyLinearImpulse(const Vector3& force);
 			
@@ -69,7 +60,7 @@ namespace NCL {
 			}
 
 			void InitCubeInertia();
-			void InitSphereInertia(bool hollow = false);
+			void InitSphereInertia();
 
 			void UpdateInertiaTensor();
 

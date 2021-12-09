@@ -26,6 +26,7 @@ namespace NCL {
 			void BasicCollisionDetection();
 			void BroadPhase();
 			void NarrowPhase();
+			std::set <CollisionDetection::CollisionInfo > broadphaseCollisions;
 
 			void ClearForces();
 
@@ -39,8 +40,6 @@ namespace NCL {
 
 			void ImpulseResolveCollision(GameObject& a , GameObject&b, CollisionDetection::ContactPoint& p) const;
 
-			void ResolveSpringCollision(GameObject& a, GameObject& b, CollisionDetection::ContactPoint& p) const;
-
 			GameWorld& gameWorld;
 
 			bool	applyGravity;
@@ -52,8 +51,6 @@ namespace NCL {
 
 			bool useBroadPhase		= true;
 			int numCollisionFrames	= 5;
-
-			float linearDamping = 0.4f;
 		};
 	}
 }

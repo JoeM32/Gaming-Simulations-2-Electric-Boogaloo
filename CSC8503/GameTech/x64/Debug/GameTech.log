@@ -1,1 +1,5 @@
-﻿
+﻿  Main.cpp
+H:\8503 Release  2021\CSC8503\GameTech\Main.cpp(81,29): warning C4244:  '=': conversion from 'int' to 'float', possible loss of data
+H:\8503 Release  2021\CSC8503\GameTech\Main.cpp(185,29): warning C4244:  '=': conversion from 'int' to 'float', possible loss of data
+H:\8503 Release  2021\CSC8503\GameTech\Main.cpp(222,12): warning C4244:  'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  GameTech.vcxproj -> H:\8503 Release  2021\x64\Debug\GameTech.exe
