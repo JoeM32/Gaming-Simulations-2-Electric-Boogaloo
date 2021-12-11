@@ -5,17 +5,23 @@ namespace NCL {
 	class OBBVolume : CollisionVolume
 	{
 	public:
-		OBBVolume(const Maths::Vector3& halfDims) {
+		OBBVolume(const NCL::CSC8503::Transform& t) : CollisionVolume(t) {
 			type		= VolumeType::OBB;
-			halfSizes	= halfDims;
 		}
 		~OBBVolume() {}
 
 		Maths::Vector3 GetHalfDimensions() const {
-			return halfSizes;
+			return transform.GetScale()/2.0f;
 		}
-	protected:
-		Maths::Vector3 halfSizes;
+
+		void GetCollisionAxes(const CollisionVolume& other, std::vector <Vector3 >& axes) const override;
+
+		virtual Vector3  GetClosestPoint(Vector3 point) const override;//gets closest vertex to a point
+
+		virtual Vector3  OBBSupport(const  Vector3& axis) const override; //gets closest vertex along an axis
+
+
+		
 	};
 }
 

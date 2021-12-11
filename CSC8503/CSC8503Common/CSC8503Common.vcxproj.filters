@@ -191,5 +191,17 @@
     <ClCompile Include="BehaviourSelector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionVolume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereVolume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AABBVolume.cpp">
+      <Filter>CollisionDetection</Filter>
+    </ClCompile>
+    <ClCompile Include="OBBVolume.cpp">
+      <Filter>CollisionDetection</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

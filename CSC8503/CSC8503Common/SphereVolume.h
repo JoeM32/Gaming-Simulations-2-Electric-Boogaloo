@@ -1,21 +1,27 @@
 #pragma once
 #include "CollisionVolume.h"
+#include "Transform.h"
 
 namespace NCL {
 	class SphereVolume : CollisionVolume
 	{
 	public:
-		SphereVolume(float sphereRadius = 1.0f) {
+		SphereVolume(const NCL::CSC8503::Transform& t) : CollisionVolume(t) {
 			type	= VolumeType::Sphere;
-			radius	= sphereRadius;
 		}
 		~SphereVolume() {}
 
 		float GetRadius() const {
-			return radius;
+			return (transform.GetScale().x + transform.GetScale().y + transform.GetScale().z) / 3.0f;
 		}
-	protected:
-		float	radius;
+
+		void GetCollisionAxes(const CollisionVolume& other, std::vector <Vector3 >& axes) const override;
+
+		virtual Vector3  GetClosestPoint(Vector3 point) const override;//gets closest vertex to a point
+
+		virtual Vector3  OBBSupport(const  Vector3& axis) const override; //gets closest vertex along an axis
+
+
 	};
 }
 

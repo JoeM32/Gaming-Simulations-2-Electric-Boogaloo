@@ -166,17 +166,20 @@
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AABBVolume.cpp" />
     <ClCompile Include="BehaviourAction.cpp" />
     <ClCompile Include="BehaviourNode.cpp" />
     <ClCompile Include="BehaviourNodeWithChildren.cpp" />
     <ClCompile Include="BehaviourSelector.cpp" />
     <ClCompile Include="BehaviourSequence.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
+    <ClCompile Include="CollisionVolume.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="NavigationGrid.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
+    <ClCompile Include="OBBVolume.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="PositionConstraint.cpp" />
@@ -185,6 +188,7 @@
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="RotationConstraint.cpp" />
+    <ClCompile Include="SphereVolume.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateTransition.cpp" />
     <ClCompile Include="Transform.cpp" />

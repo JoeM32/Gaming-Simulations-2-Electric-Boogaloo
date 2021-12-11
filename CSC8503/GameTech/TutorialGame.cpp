@@ -247,7 +247,7 @@ void TutorialGame::InitCamera() {
 	world->GetMainCamera()->SetPitch(-15.0f);
 	world->GetMainCamera()->SetYaw(315.0f);
 	world->GetMainCamera()->SetPosition(Vector3(-60, 40, 60));
-	world->GetMainCamera()->SetPosition(Vector3(500, 500, 500));
+	//world->GetMainCamera()->SetPosition(Vector3(500, 500, 500));
 	lockedObject = nullptr;
 }
 
@@ -317,11 +317,13 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	GameObject* floor = new GameObject();
 
 	Vector3 floorSize	= Vector3(100, 2, 100);
-	AABBVolume* volume	= new AABBVolume(floorSize);
-	floor->SetBoundingVolume((CollisionVolume*)volume);
+	
 	floor->GetTransform()
 		.SetScale(floorSize * 2)
 		.SetPosition(position);
+
+	AABBVolume* volume = new AABBVolume(floor->GetTransform());
+	floor->SetBoundingVolume((CollisionVolume*)volume);
 
 	floor->SetRenderObject(new RenderObject(&floor->GetTransform(), cubeMesh, basicTex, basicShader));
 	floor->SetPhysicsObject(new PhysicsObject(&floor->GetTransform(), floor->GetBoundingVolume()));
@@ -345,12 +347,14 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 	GameObject* sphere = new GameObject("Sphere");
 
 	Vector3 sphereSize = Vector3(radius, radius, radius);
-	SphereVolume* volume = new SphereVolume(radius);
-	sphere->SetBoundingVolume((CollisionVolume*)volume);
+
 
 	sphere->GetTransform()
 		.SetScale(sphereSize)
 		.SetPosition(position);
+
+	SphereVolume* volume = new SphereVolume(sphere->GetTransform());
+	sphere->SetBoundingVolume((CollisionVolume*)volume);
 
 	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
 	sphere->SetPhysicsObject(new PhysicsObject(&sphere->GetTransform(), sphere->GetBoundingVolume()));
@@ -366,12 +370,13 @@ GameObject* TutorialGame::AddSphereToWorld(const Vector3& position, float radius
 GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float halfHeight, float radius, float inverseMass) {
 	GameObject* capsule = new GameObject("Capsule");
 
-	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius);
-	capsule->SetBoundingVolume((CollisionVolume*)volume);
 
 	capsule->GetTransform()
 		.SetScale(Vector3(radius* 2, halfHeight, radius * 2))
 		.SetPosition(position);
+
+	CapsuleVolume* volume = new CapsuleVolume(halfHeight, radius, capsule->GetTransform());
+	capsule->SetBoundingVolume((CollisionVolume*)volume);
 
 	capsule->SetRenderObject(new RenderObject(&capsule->GetTransform(), capsuleMesh, basicTex, basicShader));
 	capsule->SetPhysicsObject(new PhysicsObject(&capsule->GetTransform(), capsule->GetBoundingVolume()));
@@ -390,13 +395,14 @@ GameObject* TutorialGame::AddCapsuleToWorld(const Vector3& position, float halfH
 GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
 	GameObject* cube = new GameObject();
 
-	AABBVolume* volume = new AABBVolume(dimensions);
-
-	cube->SetBoundingVolume((CollisionVolume*)volume);
+	
 
 	cube->GetTransform()
 		.SetPosition(position)
 		.SetScale(dimensions * 2);
+
+	AABBVolume* volume = new AABBVolume(cube->GetTransform());
+	cube->SetBoundingVolume((CollisionVolume*)volume);
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
 	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
@@ -429,10 +435,12 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 
 			if (rand() % 2) {
 				cubeDims.y = rand() % 3 + 0.2f;
-				AddCubeToWorld(position, cubeDims);
+				GameObject* rect = AddCubeToWorld(position, cubeDims);
+				rect->GetTransform().SetScale(Vector3(1, 1, 1));
 			}
 			else {
-				AddSphereToWorld(position, sphereRadius);
+				GameObject* sphere = AddSphereToWorld(position, sphereRadius);
+				sphere->GetTransform().SetScale(Vector3(3,3,3));
 			}
 		}
 	}
@@ -463,13 +471,14 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 
 	GameObject* character = new GameObject();
 
-	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.85f, 0.3f) * meshSize);
-
-	character->SetBoundingVolume((CollisionVolume*)volume);
+	
 
 	character->GetTransform()
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
+
+	AABBVolume* volume = new AABBVolume(character->GetTransform());
+	character->SetBoundingVolume((CollisionVolume*)volume);
 
 	if (rand() % 2) {
 		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMeshA, nullptr, basicShader));
@@ -495,12 +504,14 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 
 	GameObject* character = new GameObject();
 
-	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
-	character->SetBoundingVolume((CollisionVolume*)volume);
+	
 
 	character->GetTransform()
 		.SetScale(Vector3(meshSize, meshSize, meshSize))
 		.SetPosition(position);
+
+	AABBVolume* volume = new AABBVolume(character->GetTransform());
+	character->SetBoundingVolume((CollisionVolume*)volume);
 
 	character->SetRenderObject(new RenderObject(&character->GetTransform(), enemyMesh, nullptr, basicShader));
 	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
@@ -516,11 +527,13 @@ GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	GameObject* apple = new GameObject();
 
-	SphereVolume* volume = new SphereVolume(0.25f);
-	apple->SetBoundingVolume((CollisionVolume*)volume);
+	
 	apple->GetTransform()
 		.SetScale(Vector3(0.25, 0.25, 0.25))
 		.SetPosition(position);
+
+	SphereVolume* volume = new SphereVolume(apple->GetTransform());
+	apple->SetBoundingVolume((CollisionVolume*)volume);
 
 	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), bonusMesh, nullptr, basicShader));
 	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
@@ -537,11 +550,13 @@ StateGameObject* NCL::CSC8503::TutorialGame::AddStateObjectToWorld(const Vector3
 {
 	StateGameObject* apple = new StateGameObject();
 
-	SphereVolume* volume = new SphereVolume(0.25f);
-	apple->SetBoundingVolume((CollisionVolume*)volume);
+	
 	apple->GetTransform()
 		.SetScale(Vector3(0.25, 0.25, 0.25))
 		.SetPosition(position);
+
+	SphereVolume* volume = new SphereVolume(apple->GetTransform());
+	apple->SetBoundingVolume((CollisionVolume*)volume);
 
 	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), bonusMesh, nullptr, basicShader));
 	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));

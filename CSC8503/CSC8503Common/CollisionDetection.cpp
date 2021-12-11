@@ -397,8 +397,10 @@ bool CollisionDetection::AABBIntersection(const AABBVolume& volumeA, const Trans
 	Vector3 boxAPos = worldTransformA.GetPosition();
 	Vector3 boxBPos = worldTransformB.GetPosition();
 
-	Vector3 boxASize = volumeA.GetHalfDimensions();
-	Vector3 boxBSize = volumeB.GetHalfDimensions();
+	Vector3 boxASize = volumeA.GetHalfDimensions();// *worldTransformA.GetScale();
+	//Vector3 boxASize = worldTransformA.GetScale() / 2.0f;
+	Vector3 boxBSize = volumeB.GetHalfDimensions();// *worldTransformB.GetScale();
+	//Vector3 boxBSize = worldTransformB.GetScale() / 2.0f;
 
 	bool overlap = AABBTest(boxAPos, boxBPos, boxASize, boxBSize);
 	if (overlap) {
@@ -446,7 +448,15 @@ bool CollisionDetection::AABBIntersection(const AABBVolume& volumeA, const Trans
 //Sphere / Sphere Collision
 bool CollisionDetection::SphereIntersection(const SphereVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
-	float radii = volumeA.GetRadius() + volumeB.GetRadius();
+
+
+	//float radiusA =  (worldTransformA.GetScale().x + worldTransformA.GetScale().y + worldTransformA.GetScale().z) / 3.0f;
+	//float radiusB =  (worldTransformB.GetScale().x + worldTransformB.GetScale().y + worldTransformB.GetScale().z) / 3.0f;
+	float radiusA = volumeA.GetRadius();
+	float radiusB = volumeB.GetRadius();
+
+	float radii = radiusA + radiusB;
+
 	Vector3 delta = worldTransformB.GetPosition() -
 		worldTransformA.GetPosition();
 	float deltaLength = delta.Length();
@@ -454,8 +464,8 @@ bool CollisionDetection::SphereIntersection(const SphereVolume& volumeA, const T
 	if (deltaLength < radii) {
 		float penetration = (radii - deltaLength);
 		Vector3 normal = delta.Normalised();
-		Vector3 localA = normal * volumeA.GetRadius();
-		Vector3 localB = -normal * volumeB.GetRadius();
+		Vector3 localA = normal * radiusA;
+		Vector3 localB = -normal * radiusB;
 
 		collisionInfo.AddContactPoint(localA, localB, normal, penetration);
 		return true;//we’re colliding!
@@ -468,7 +478,11 @@ bool CollisionDetection::SphereIntersection(const SphereVolume& volumeA, const T
 bool CollisionDetection::AABBSphereIntersection(const AABBVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
 
-	Vector3 boxSize = volumeA.GetHalfDimensions();
+	Vector3 boxSize = volumeA.GetHalfDimensions();// *worldTransformA.GetScale();
+	//Vector3 boxSize = worldTransformA.GetScale() / 2.0f;
+	float radius = volumeB.GetRadius();// *((worldTransformB.GetScale().x + worldTransformB.GetScale().y + worldTransformB.GetScale().z) / 3.0f);
+	//float radius = ((worldTransformB.GetScale().x + worldTransformB.GetScale().y + worldTransformB.GetScale().z) / 3.0f);
+
 	Vector3 delta = worldTransformB.GetPosition() -
 		worldTransformA.GetPosition();
 
@@ -476,12 +490,12 @@ bool CollisionDetection::AABBSphereIntersection(const AABBVolume& volumeA, const
 	Vector3 localPoint = delta - closestPointOnBox;
 	float distance = localPoint.Length();
 
-	if (distance < volumeB.GetRadius()) {//yes , we’re colliding!
+	if (distance < radius) {//yes , we’re colliding!
 		Vector3 collisionNormal = localPoint.Normalised();
-		float penetration = (volumeB.GetRadius() - distance);
+		float penetration = (radius - distance);
 
 		Vector3 localA = Vector3();
-		Vector3 localB = -collisionNormal * volumeB.GetRadius();
+		Vector3 localB = -collisionNormal * radius;
 
 		collisionInfo.AddContactPoint(localA, localB,
 			collisionNormal, penetration);
@@ -497,8 +511,73 @@ bool CollisionDetection::OBBIntersection(
 	return false;
 }
 
-bool CollisionDetection::SphereCapsuleIntersection(
-	const CapsuleVolume& volumeA, const Transform& worldTransformA,
+bool CollisionDetection::SATCollision(const CollisionVolume& volumeA, const CollisionVolume& volumeB, CollisionInfo& collisionInfo)
+{
+	std::vector <Vector3 > collisionAxes;
+	std::vector <Vector3 >  axesA;
+	std::vector <Vector3 >  axesB;
+	volumeA.GetCollisionAxes(volumeB , axesA);
+	for (const Vector3& axis : axesA)
+	{
+		collisionAxes.emplace_back(axis.Normalised());
+	}
+	volumeB.GetCollisionAxes(volumeA, axesB);
+	for (const Vector3& axis : axesB)
+	{
+		collisionAxes.emplace_back(axis.Normalised());
+	}
+	for (const Vector3& edgeA : axesA)
+	{
+		for (const Vector3& edgeB : axesB)
+		{
+			collisionAxes.emplace_back(Vector3::Cross(edgeA, edgeB).Normalised());
+		}
+	}
+	for (const Vector3& axis : collisionAxes)
+	{
+		if (!SATCheckAxis(axis , volumeA,volumeB, collisionInfo))
+			return  false;
+	}
+	return  true;
+}
+
+bool NCL::CollisionDetection::SATCheckAxis(const Vector3& axis, const CollisionVolume& volumeA, const CollisionVolume& volumeB, CollisionInfo& collisionInfo)
+{
+	Vector3 minA = volumeA.OBBSupport(axis * -1);
+	Vector3 maxA = volumeA.OBBSupport(axis);
+	Vector3 minB = volumeA.OBBSupport(axis * -1);
+	Vector3 maxB = volumeA.OBBSupport(axis);
+
+	float A = Vector3::Dot(axis, minA);
+	float B = Vector3::Dot(axis, maxA);
+	float C = Vector3::Dot(axis, minB);
+	float D = Vector3::Dot(axis, maxB);
+
+	/*float A = Vector3::Dot(axis, volumeA.OBBSupport(axis * -1));
+	float B = Vector3 ::Dot(axis , volumeA.OBBSupport(axis));
+	float C = Vector3 ::Dot(axis , volumeB.OBBSupport(axis * -1));
+	float D = Vector3 ::Dot(axis , volumeB.OBBSupport(axis));*/
+	if (A <= C && B >= C)
+	{
+		collisionInfo.AddContactPoint(volumeA.GetClosestPoint(minB), minB, axis, C - B);
+		return  true;
+	}
+	if (C <= A && D >= A)
+	{
+		collisionInfo.AddContactPoint(volumeA.GetClosestPoint(minA), minA, -axis, A - D);
+		return  true;
+	}
+	return  false;
+}
+
+
+bool CollisionDetection::SphereCapsuleIntersection(const CapsuleVolume& volumeA, const Transform& worldTransformA,
+	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
+
+	//BAD BAD BAAAAAAAD
+	//all my homies hate capsules
+
+	/*const CapsuleVolume& volumeA, const Transform& worldTransformA,
 	const SphereVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo) {
 
 	SphereVolume ball = SphereVolume(volumeA.GetRadius());
@@ -518,5 +597,7 @@ bool CollisionDetection::SphereCapsuleIntersection(
 	{
 		return true;
 	}
+	return false;*/
+
 	return false;
 }

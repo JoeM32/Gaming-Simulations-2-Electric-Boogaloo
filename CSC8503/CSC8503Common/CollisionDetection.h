@@ -100,6 +100,10 @@ namespace NCL {
 		static bool OBBIntersection(	const OBBVolume& volumeA, const Transform& worldTransformA,
 										const OBBVolume& volumeB, const Transform& worldTransformB, CollisionInfo& collisionInfo);
 
+		static bool SATCollision(const CollisionVolume& volumeA, const CollisionVolume& volumeB, CollisionInfo& collisionInfo);
+
+		static bool SATCheckAxis(const Vector3& axis, const CollisionVolume& volumeA, const CollisionVolume& volumeB, CollisionInfo& collisionInfo);
+
 		static Vector3 Unproject(const Vector3& screenPos, const Camera& cam);
 
 		static Vector3		UnprojectScreenPosition(Vector3 position, float aspect, float fov, const Camera &c);
