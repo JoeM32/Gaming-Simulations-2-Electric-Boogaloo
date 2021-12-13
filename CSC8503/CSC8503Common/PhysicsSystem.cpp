@@ -440,7 +440,7 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 	std::vector <GameObject*>::const_iterator first;
 	std::vector <GameObject*>::const_iterator last;
 	gameWorld.GetObjectIterators(first, last);
-	float frameLinearDamping = 1.0f - (linearDamping * dt);
+	//float frameLinearDamping = 1.0f - (linearDamping * dt);
 
 	for (auto i = first; i != last; ++i) {
 		PhysicsObject* object = (*i)->GetPhysicsObject();
@@ -448,6 +448,9 @@ void PhysicsSystem::IntegrateVelocity(float dt) {
 			continue;
 
 		}
+
+		float frameLinearDamping = 1.0f - (object->GetDamping() * dt);
+
 		Transform& transform = (*i)->GetTransform();
 		// Position Stuff
 		Vector3 position = transform.GetPosition();

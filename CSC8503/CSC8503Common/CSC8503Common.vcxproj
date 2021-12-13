@@ -139,6 +139,7 @@
     <ClInclude Include="BehaviourSelector.h" />
     <ClInclude Include="BehaviourSequence.h" />
     <ClInclude Include="CapsuleVolume.h" />
+    <ClInclude Include="HookConstraint.h" />
     <ClInclude Include="NavigationGrid.h" />
     <ClInclude Include="NavigationMap.h" />
     <ClInclude Include="NavigationMesh.h" />
@@ -162,6 +163,8 @@
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RenderObject.h" />
+    <ClInclude Include="SpinConstraint.h" />
+    <ClInclude Include="SpringConstraint.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="StateTransition.h" />
@@ -179,6 +182,7 @@
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameWorld.cpp" />
+    <ClCompile Include="HookConstraint.cpp" />
     <ClCompile Include="NavigationGrid.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="OBBVolume.cpp" />
@@ -193,6 +197,8 @@
     <ClCompile Include="RotationAxisConstraint.cpp" />
     <ClCompile Include="RotationConstraint.cpp" />
     <ClCompile Include="SphereVolume.cpp" />
+    <ClCompile Include="SpinConstraint.cpp" />
+    <ClCompile Include="SpringConstraint.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateTransition.cpp" />
     <ClCompile Include="Transform.cpp" />

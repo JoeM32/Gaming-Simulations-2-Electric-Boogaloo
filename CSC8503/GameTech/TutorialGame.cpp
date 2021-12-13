@@ -91,6 +91,8 @@ void TutorialGame::UpdateGame(float dt) {
 	MoveSelectedObject();
 	physics->Update(dt);
 
+
+
 	if (lockedObject != nullptr) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
 		Vector3 camPos = objPos + lockedOffset;
@@ -272,7 +274,9 @@ void NCL::CSC8503::TutorialGame::InitOne()
 	float sphereRadius = 1.0f;
 
 	//GameObject* sphere = AddSphereToWorld(Vector3(0,5,0), sphereRadius);
-	GameObject* OBB = AddOBBToWorld(Vector3(0, 0.5, 0), Vector3(0,0,0), Vector3(1,1,1));
+	GameObject* OBB1 = AddOBBToWorld(Vector3(0, 0.5, 0), Vector3(0,0,0), Vector3(1,1,1));
+
+	GameObject* OBB2 = AddOBBToWorld(Vector3(0, 5, 0), Vector3(0, 0, 0), Vector3(1, 1, 1));
 }
 
 void TutorialGame::BridgeConstraintTest() {
@@ -500,7 +504,7 @@ void TutorialGame::InitGameExamples() {
 	AddBonusToWorld(Vector3(10, 5, 0));
 }
 
-GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
+/*GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
 
@@ -531,7 +535,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	//lockedObject = character;
 
 	return character;
-}
+}*/
 
 GameObject* TutorialGame::AddEnemyToWorld(const Vector3& position) {
 	float meshSize		= 3.0f;
@@ -602,6 +606,29 @@ StateGameObject* NCL::CSC8503::TutorialGame::AddStateObjectToWorld(const Vector3
 	world->AddGameObject(apple);
 
 	return apple;
+}
+
+GameObject* NCL::CSC8503::TutorialGame::AddPlayerToWorld(const Vector3& position)
+{
+	GameObject* player = new Player();
+
+
+	player->GetTransform()
+		.SetScale(Vector3(3, 3, 3))
+		.SetPosition(position);
+
+	SphereVolume* volume = new SphereVolume(player->GetTransform());
+	player->SetBoundingVolume((CollisionVolume*)volume);
+
+	player->SetRenderObject(new RenderObject(&player->GetTransform(), sphereMesh, nullptr, basicShader));
+	player->SetPhysicsObject(new PhysicsObject(&player->GetTransform(), player->GetBoundingVolume()));
+
+	player->GetPhysicsObject()->SetInverseMass(1.0f);
+	player->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(player);
+
+	return player;
 }
 
 /*

@@ -48,6 +48,15 @@ namespace NCL {
 				this->elasticity = elasticity;
 			}
 
+			float GetDamping() const {
+				return damping;
+			}
+
+			void SetDamping(float elasticity)
+			{
+				this->damping = damping;
+			}
+
 			void ApplyAngularImpulse(const Vector3& force);
 			void ApplyLinearImpulse(const Vector3& force);
 			
@@ -83,6 +92,7 @@ namespace NCL {
 
 			float inverseMass;
 			float elasticity;
+			float damping;
 			float friction;
 
 			//linear stuff

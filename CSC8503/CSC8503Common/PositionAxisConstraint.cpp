@@ -10,7 +10,7 @@ bool NCL::CSC8503::PositionAxisConstraint::UpdateConstraint(float dt)
 
 	Vector3 velocity = physOb->GetLinearVelocity();
 	physOb->SetLinearVelocity(velocity * axis);
-	return false;
+	return true;
 }
 
 

@@ -10,6 +10,7 @@ PhysicsObject::PhysicsObject(Transform* parentTransform, const CollisionVolume* 
 
 	inverseMass = 1.0f;
 	elasticity	= 0.66f;
+	damping = 0.4;
 	friction	= 0.8f;
 }
 

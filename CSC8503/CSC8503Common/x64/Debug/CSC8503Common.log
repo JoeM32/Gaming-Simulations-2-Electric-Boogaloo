@@ -1,2 +1,17 @@
-﻿  CollisionDetection.cpp
-  CSC8503Common.vcxproj -> C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\CSC8503Common.lib
+﻿  AABBVolume.cpp
+  CollisionDetection.cpp
+  CollisionVolume.cpp
+  GameObject.cpp
+  GameWorld.cpp
+  OBBVolume.cpp
+  PhysicsObject.cpp
+C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\PhysicsObject.cpp(13,15): warning C4305: '=': truncation from 'double' to 'float'
+  PhysicsSystem.cpp
+  PositionAxisConstraint.cpp
+  PositionConstraint.cpp
+  QuadTree.cpp
+  RotationAxisConstraint.cpp
+  RotationConstraint.cpp
+  SphereVolume.cpp
+  Generating Code...
+  CSC8503Common.vcxproj -> C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\CSC8503Common.lib

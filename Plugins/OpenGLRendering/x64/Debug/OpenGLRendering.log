@@ -1,7 +1,1 @@
-﻿  OGLMesh.cpp
-  OGLRenderer.cpp
-C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\Plugins\OpenGLRendering\OGLRenderer.cpp(301,51): warning C4267:  'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-  OGLTexture.cpp
-  Generating Code...
-C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\Plugins\OpenGLRendering\OGLRenderer.cpp(323,52): warning C4267:  'argument': conversion from 'size_t' to 'unsigned int', possible loss of data
-  OpenGLRendering.vcxproj -> C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\OpenGLRendering.lib
+﻿  OpenGLRendering.vcxproj -> C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\OpenGLRendering.lib

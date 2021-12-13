@@ -21,6 +21,10 @@ namespace NCL {
 				boundingVolume = vol;
 			}
 
+			virtual void Update(float dt) {
+
+			}
+
 			const CollisionVolume* GetBoundingVolume() const {
 				return boundingVolume;
 			}
