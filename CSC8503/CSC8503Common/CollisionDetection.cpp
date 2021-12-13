@@ -344,6 +344,10 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 
 	VolumeType pairType = (VolumeType)((int)volA->type | (int)volB->type);
 
+	if (volA->type == VolumeType::OBB || volB->type == VolumeType::OBB) {
+		return SATCollision(*volA, *volB, collisionInfo);
+	}
+
 	if (pairType == VolumeType::AABB) {
 		return AABBIntersection((AABBVolume&)*volA, transformA, (AABBVolume&)*volB, transformB, collisionInfo);
 	}
@@ -352,9 +356,9 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 		return SphereIntersection((SphereVolume&)*volA, transformA, (SphereVolume&)*volB, transformB, collisionInfo);
 	}
 
-	if (pairType == VolumeType::OBB) {
+	/*if (pairType == VolumeType::OBB) {
 		return OBBIntersection((OBBVolume&)*volA, transformA, (OBBVolume&)*volB, transformB, collisionInfo);
-	}
+	}*/
 
 	if (volA->type == VolumeType::AABB && volB->type == VolumeType::Sphere) {
 		return AABBSphereIntersection((AABBVolume&)*volA, transformA, (SphereVolume&)*volB, transformB, collisionInfo);
@@ -513,31 +517,53 @@ bool CollisionDetection::OBBIntersection(
 
 bool CollisionDetection::SATCollision(const CollisionVolume& volumeA, const CollisionVolume& volumeB, CollisionInfo& collisionInfo)
 {
+	collisionInfo.point.penetration = 2^16;
 	std::vector <Vector3 > collisionAxes;
 	std::vector <Vector3 >  axesA;
 	std::vector <Vector3 >  axesB;
 	volumeA.GetCollisionAxes(volumeB , axesA);
 	for (const Vector3& axis : axesA)
 	{
+		//std::cout << axis;
 		collisionAxes.emplace_back(axis.Normalised());
 	}
 	volumeB.GetCollisionAxes(volumeA, axesB);
 	for (const Vector3& axis : axesB)
 	{
+		//std::cout << axis;
 		collisionAxes.emplace_back(axis.Normalised());
 	}
 	for (const Vector3& edgeA : axesA)
 	{
 		for (const Vector3& edgeB : axesB)
 		{
-			collisionAxes.emplace_back(Vector3::Cross(edgeA, edgeB).Normalised());
+			Vector3 axis = Vector3::Cross(edgeA, edgeB).Normalised();
+			if (axis != Vector3(0, 0, 0))
+			{
+				collisionAxes.emplace_back(axis);
+			}
 		}
 	}
+	//std::cout << axesA.size();
+	CollisionInfo testCollision;
 	for (const Vector3& axis : collisionAxes)
 	{
-		if (!SATCheckAxis(axis , volumeA,volumeB, collisionInfo))
+		if (!SATCheckAxis(axis, volumeA, volumeB, testCollision))
+		{
+			std::cout << "Not colliding" << "\n";
 			return  false;
+		}
+		else
+		{
+			std::cout << "Pen - " << std::to_string(testCollision.point.penetration) << "\n";
+			if (abs(testCollision.point.penetration) < abs(collisionInfo.point.penetration))
+			{
+				
+				collisionInfo.point = testCollision.point;
+			}
+		}
 	}
+	std::cout << "Colliding - " << std::to_string(collisionInfo.point.penetration) << "\n";
 	return  true;
 }
 
@@ -545,13 +571,17 @@ bool NCL::CollisionDetection::SATCheckAxis(const Vector3& axis, const CollisionV
 {
 	Vector3 minA = volumeA.OBBSupport(axis * -1);
 	Vector3 maxA = volumeA.OBBSupport(axis);
-	Vector3 minB = volumeA.OBBSupport(axis * -1);
-	Vector3 maxB = volumeA.OBBSupport(axis);
+	Vector3 minB = volumeB.OBBSupport(axis * -1);
+	Vector3 maxB = volumeB.OBBSupport(axis);
+
+	std::cout << axis << "-->" << minA << maxA << minB << maxB << "\n";
 
 	float A = Vector3::Dot(axis, minA);
 	float B = Vector3::Dot(axis, maxA);
 	float C = Vector3::Dot(axis, minB);
 	float D = Vector3::Dot(axis, maxB);
+
+	std::cout << "points" << "-->" << A << " " << B << " " << C << " " << D << "\n";
 
 	/*float A = Vector3::Dot(axis, volumeA.OBBSupport(axis * -1));
 	float B = Vector3 ::Dot(axis , volumeA.OBBSupport(axis));

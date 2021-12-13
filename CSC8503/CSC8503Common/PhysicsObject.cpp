@@ -58,7 +58,10 @@ void PhysicsObject::InitCubeInertia() {
 }
 
 void PhysicsObject::InitSphereInertia(bool hollow) {
-	float radius	= transform->GetScale().GetMaxElement();
+	float radius	= transform->GetScale().GetMaxElement();//why not use getRadius()??? This is using the transform, which is only visual.
+
+	//13/12/2021 I have now changed it so transform changes both visuals and updates collider. Still confusing
+
 	float i			= hollow ? 1.5f * inverseMass / (radius * radius) : 2.5f * inverseMass / (radius*radius); //I = 2/3 M r^2
 
 	inverseInertia	= Vector3(i, i, i);

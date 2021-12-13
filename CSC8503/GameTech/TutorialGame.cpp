@@ -257,13 +257,13 @@ void TutorialGame::InitWorld() {
 	world->ClearAndErase();
 	physics->Clear();
 
-	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
+	//InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	//InitGameExamples();
 	InitDefaultFloor();
 	InitOne();
 	//BridgeConstraintTest();
 
-	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
+	//testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 
 }
 
@@ -271,7 +271,8 @@ void NCL::CSC8503::TutorialGame::InitOne()
 {
 	float sphereRadius = 1.0f;
 
-	GameObject* sphere = AddSphereToWorld(Vector3(0,5,0), sphereRadius);
+	//GameObject* sphere = AddSphereToWorld(Vector3(0,5,0), sphereRadius);
+	GameObject* OBB = AddOBBToWorld(Vector3(0, 0.5, 0), Vector3(0,0,0), Vector3(1,1,1));
 }
 
 void TutorialGame::BridgeConstraintTest() {
@@ -411,6 +412,28 @@ GameObject* TutorialGame::AddCubeToWorld(const Vector3& position, Vector3 dimens
 		.SetScale(dimensions * 2);
 
 	AABBVolume* volume = new AABBVolume(cube->GetTransform());
+	cube->SetBoundingVolume((CollisionVolume*)volume);
+
+	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+
+	cube->GetPhysicsObject()->SetInverseMass(inverseMass);
+	cube->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(cube);
+
+	return cube;
+}
+
+GameObject* TutorialGame::AddOBBToWorld(const Vector3& position, Vector3 rotation, Vector3 dimensions, float inverseMass) {
+	GameObject* cube = new GameObject();
+
+	cube->GetTransform()
+		.SetPosition(position)
+		.SetOrientation(Quaternion::EulerAnglesToQuaternion(rotation.x,rotation.y,rotation.z))
+		.SetScale(dimensions * 2);
+
+	OBBVolume* volume = new OBBVolume(cube->GetTransform());
 	cube->SetBoundingVolume((CollisionVolume*)volume);
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));

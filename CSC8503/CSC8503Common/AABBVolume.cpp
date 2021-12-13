@@ -21,5 +21,5 @@ Vector3 NCL::AABBVolume::OBBSupport(const Vector3& axis) const//treated like an 
 	vertex.x = localDir.x < 0 ? -GetHalfDimensions().x : GetHalfDimensions().x;
 	vertex.y = localDir.y < 0 ? -GetHalfDimensions().y : GetHalfDimensions().y;
 	vertex.z = localDir.z < 0 ? -GetHalfDimensions().z : GetHalfDimensions().z;
-	return vertex;
+	return vertex + transform.GetPosition();
 }
