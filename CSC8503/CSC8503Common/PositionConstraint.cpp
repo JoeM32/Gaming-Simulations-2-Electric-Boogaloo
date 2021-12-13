@@ -4,7 +4,7 @@
 
 using namespace NCL::CSC8503;
 
-void PositionConstraint::UpdateConstraint(float dt) {
+bool PositionConstraint::UpdateConstraint(float dt) {
 	Vector3 relativePos =
 		objectA->GetTransform().GetPosition() -
 		objectB->GetTransform().GetPosition();
@@ -40,6 +40,7 @@ void PositionConstraint::UpdateConstraint(float dt) {
 		}
 
 	}
+	return true;
 
 }
 

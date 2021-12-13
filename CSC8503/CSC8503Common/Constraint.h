@@ -7,7 +7,7 @@ namespace NCL {
 			Constraint() {}
 			virtual ~Constraint() {}
 
-			virtual void UpdateConstraint(float dt) = 0;
+			virtual bool UpdateConstraint(float dt) = 0;
 		};
 	}
 }

@@ -123,6 +123,12 @@
     <ClInclude Include="BehaviourSelector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PositionAxisConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RotationAxisConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameWorld.cpp">
@@ -202,6 +208,12 @@
     </ClCompile>
     <ClCompile Include="OBBVolume.cpp">
       <Filter>CollisionDetection</Filter>
+    </ClCompile>
+    <ClCompile Include="PositionAxisConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RotationAxisConstraint.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

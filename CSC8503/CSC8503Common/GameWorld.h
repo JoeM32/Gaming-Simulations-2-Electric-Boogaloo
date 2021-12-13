@@ -25,7 +25,7 @@ namespace NCL {
 			void RemoveGameObject(GameObject* o, bool andDelete = false);
 
 			void AddConstraint(Constraint* c);
-			void RemoveConstraint(Constraint* c, bool andDelete = false);
+			std::vector<Constraint*>::const_iterator  RemoveConstraint(Constraint* c, bool andDelete = false);
 
 			Camera* GetMainCamera() const {
 				return mainCamera;
@@ -53,6 +53,8 @@ namespace NCL {
 				std::vector<Constraint*>::const_iterator& first,
 				std::vector<Constraint*>::const_iterator& last) const;
 
+			std::vector<Constraint*>::const_iterator GetConstraintFirst() const;
+			std::vector<Constraint*>::const_iterator GetConstraintLast() const;
 		protected:
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;

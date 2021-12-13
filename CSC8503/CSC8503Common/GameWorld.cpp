@@ -113,11 +113,12 @@ void GameWorld::AddConstraint(Constraint* c) {
 	constraints.emplace_back(c);
 }
 
-void GameWorld::RemoveConstraint(Constraint* c, bool andDelete) {
-	constraints.erase(std::remove(constraints.begin(), constraints.end(), c), constraints.end());
+std::vector<Constraint*>::const_iterator  GameWorld::RemoveConstraint(Constraint* c, bool andDelete) {
+	std::vector<Constraint*>::const_iterator  i = constraints.erase(std::remove(constraints.begin(), constraints.end(), c), constraints.end());
 	if (andDelete) {
 		delete c;
 	}
+	return i;
 }
 
 void GameWorld::GetConstraintIterators(
@@ -125,4 +126,14 @@ void GameWorld::GetConstraintIterators(
 	std::vector<Constraint*>::const_iterator& last) const {
 	first	= constraints.begin();
 	last	= constraints.end();
+}
+
+std::vector<Constraint*>::const_iterator NCL::CSC8503::GameWorld::GetConstraintFirst() const
+{
+	return constraints.begin();
+}
+
+std::vector<Constraint*>::const_iterator NCL::CSC8503::GameWorld::GetConstraintLast() const
+{
+	return constraints.end();
 }

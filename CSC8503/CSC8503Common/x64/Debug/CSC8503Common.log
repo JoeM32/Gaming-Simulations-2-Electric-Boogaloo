@@ -1,12 +1,5 @@
-﻿  CollisionDetection.cpp
-  GameObject.cpp
-  GameWorld.cpp
-  OBBVolume.cpp
+﻿  GameWorld.cpp
   PhysicsObject.cpp
   PhysicsSystem.cpp
-  PositionConstraint.cpp
-  QuadTree.cpp
-  RotationConstraint.cpp
-  SphereVolume.cpp
   Generating Code...
   CSC8503Common.vcxproj -> C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\CSC8503Common.lib

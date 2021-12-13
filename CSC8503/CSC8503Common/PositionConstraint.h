@@ -15,7 +15,7 @@ namespace NCL {
 			}
 			~PositionConstraint() {}
 
-			void UpdateConstraint(float dt) override;
+			bool UpdateConstraint(float dt) override;
 
 		protected:
 			GameObject* objectA;

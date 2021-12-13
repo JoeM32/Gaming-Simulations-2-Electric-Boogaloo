@@ -114,7 +114,7 @@ void PhysicsSystem::Update(float dt) {
 	}
 
 	ClearForces();	//Once we've finished with the forces, reset them to zero
-
+	//std::cout << "Physics step\n";
 	UpdateCollisionList(); //Remove any old collisions
 
 	t.Tick();
@@ -159,6 +159,9 @@ void PhysicsSystem::UpdateCollisionList() {
 			i->b->OnCollisionBegin(i->a);
 		}
 		(*i).framesLeft = (*i).framesLeft - 1;
+		i->a->OnCollisionStay(i->b);
+		i->b->OnCollisionStay(i->a);
+		//std::cout << std::to_string((*i).framesLeft) << "\n";
 		if ((*i).framesLeft < 0) {
 			i->a->OnCollisionEnd(i->b);
 			i->b->OnCollisionEnd(i->a);
@@ -214,7 +217,16 @@ void PhysicsSystem::BasicCollisionDetection() {
 				//std::cout << "Collision between " << (*i)->GetName()
 				//	<< " and " << (*j)->GetName() << std::endl;
 				ImpulseResolveCollision(*info.a, *info.b, info.point);
-				info.framesLeft = numCollisionFrames;
+				//std::cout << "Collision" << std::endl;
+				info. framesLeft = numCollisionFrames;
+				/*if (allCollisions.find(info) != allCollisions.end()) {
+					std::cout << "Element is present in the set" << std::endl;
+					(*allCollisions.find(info)).framesLeft == 4;
+				}
+				else
+				{
+					allCollisions.insert(info);
+				}*/
 				allCollisions.insert(info);
 			}
 		}
@@ -484,11 +496,30 @@ us to model springs and ropes etc.
 
 */
 void PhysicsSystem::UpdateConstraints(float dt) {
-	std::vector<Constraint*>::const_iterator first;
+	/*std::vector<Constraint*>::const_iterator first;
 	std::vector<Constraint*>::const_iterator last;
 	gameWorld.GetConstraintIterators(first, last);
 
-	for (auto i = first; i != last; ++i) {
-		(*i)->UpdateConstraint(dt);
+	for (auto i = first; i != last; i) {
+		if (!(*i)->UpdateConstraint(dt))
+		{
+			i = gameWorld.RemoveConstraint(*i,true);// .erase(i);
+		}
+		else
+		{
+			i++;
+		}
+	}*/
+	auto i = gameWorld.GetConstraintFirst();
+	while (i != gameWorld.GetConstraintLast())
+	{
+		if (!(*i)->UpdateConstraint(dt))
+		{
+			i = gameWorld.RemoveConstraint(*i, true);// .erase(i);
+		}
+		else
+		{
+			i++;
+		}
 	}
 }

@@ -6,6 +6,8 @@
 #include "../../Common/TextureLoader.h"
 #include "../CSC8503Common/PositionConstraint.h"
 #include "../CSC8503Common/RotationConstraint.h"
+#include "../CSC8503Common/PositionAxisConstraint.h"
+#include "../CSC8503Common/RotationAxisConstraint.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -256,13 +258,20 @@ void TutorialGame::InitWorld() {
 	physics->Clear();
 
 	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
-	InitGameExamples();
+	//InitGameExamples();
 	InitDefaultFloor();
-
-	BridgeConstraintTest();
+	InitOne();
+	//BridgeConstraintTest();
 
 	testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
 
+}
+
+void NCL::CSC8503::TutorialGame::InitOne()
+{
+	float sphereRadius = 1.0f;
+
+	GameObject* sphere = AddSphereToWorld(Vector3(0,5,0), sphereRadius);
 }
 
 void TutorialGame::BridgeConstraintTest() {
@@ -436,6 +445,9 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 			if (rand() % 2) {
 				cubeDims.y = rand() % 3 + 0.2f;
 				GameObject* rect = AddCubeToWorld(position, cubeDims);
+				PositionAxisConstraint* constraint = new PositionAxisConstraint(rect,
+					Vector3(1,0,0));
+				world->AddConstraint(constraint);
 				rect->GetTransform().SetScale(Vector3(1, 1, 1));
 			}
 			else {

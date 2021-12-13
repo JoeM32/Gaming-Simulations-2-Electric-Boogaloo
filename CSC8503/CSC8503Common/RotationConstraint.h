@@ -14,7 +14,7 @@ namespace NCL {
 			}
 			~RotationConstraint() {}
 
-			void UpdateConstraint(float dt) override;
+			bool UpdateConstraint(float dt) override;
 
 		protected:
 			GameObject* objectA;
