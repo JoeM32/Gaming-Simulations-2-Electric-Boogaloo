@@ -542,6 +542,10 @@ bool CollisionDetection::SATCollision(const CollisionVolume& volumeA, const Coll
 			{
 				collisionAxes.emplace_back(axis);
 			}
+			else
+			{
+				//std::cout << "Zero Axis" << "\n";
+			}
 		}
 	}
 	//std::cout << axesA.size();
@@ -550,7 +554,7 @@ bool CollisionDetection::SATCollision(const CollisionVolume& volumeA, const Coll
 	{
 		if (!SATCheckAxis(axis, volumeA, volumeB, testCollision))
 		{
-			std::cout << "Not colliding" << "\n";
+			//std::cout << "Not colliding" << "\n";
 			return  false;
 		}
 		else
@@ -563,7 +567,7 @@ bool CollisionDetection::SATCollision(const CollisionVolume& volumeA, const Coll
 			}
 		}
 	}
-	std::cout << "Colliding - " << std::to_string(collisionInfo.point.penetration) << "\n";
+	//std::cout << "Colliding - " << collisionInfo.point.normal << "\n";
 	return  true;
 }
 
@@ -587,33 +591,33 @@ bool NCL::CollisionDetection::SATCheckAxis(const Vector3& axis, const CollisionV
 	float B = Vector3 ::Dot(axis , volumeA.OBBSupport(axis));
 	float C = Vector3 ::Dot(axis , volumeB.OBBSupport(axis * -1));
 	float D = Vector3 ::Dot(axis , volumeB.OBBSupport(axis));*/
-	if (A <= C && B >= C)
+	/*if (A <= C && B >= C)
 	{
 		collisionInfo.AddContactPoint(volumeA.GetClosestPoint(minB), minB, -axis, C - B);
 		//std::cout << axis << "-->" << minA << maxA << minB << maxB << "\n";
-		std::cout << "1-A-" << volumeA.GetClosestPoint(minB) << " B-" << minB << "\n";
+		//std::cout << "1-A-" << volumeA.GetClosestPoint(minB) << " B-" << minB << "\n";
 		return  true;
 	}
 	if (C <= A && D >= A)
 	{
 		collisionInfo.AddContactPoint(volumeB.GetClosestPoint(minA), minA, axis, A - D);
-		std::cout << "2-A-" << volumeB.GetClosestPoint(minA) << " B-" << minA << "\n";
+		//std::cout << "2-A-" << volumeB.GetClosestPoint(minA) << " B-" << minA << "\n";
 		return  true;
-	}
-	/*
+	}*/
+	
 	if (A <= C && B >= C)
 	{
 		collisionInfo.AddContactPoint(volumeA.GetClosestPoint(minB), volumeB.GetClosestPoint(volumeA.GetClosestPoint(minB)), -axis, C - B);
 		//std::cout << axis << "-->" << minA << maxA << minB << maxB << "\n";
-		std::cout << "1-A-" << volumeA.GetClosestPoint(minB) << " B-" << volumeB.GetClosestPoint(volumeA.GetClosestPoint(minB)) << "\n";
+		//std::cout << "1-A-" << volumeA.GetClosestPoint(minB) << " B-" << volumeB.GetClosestPoint(volumeA.GetClosestPoint(minB)) << "\n";
 		return  true;
 	}
 	if (C <= A && D >= A)
 	{
 		collisionInfo.AddContactPoint(volumeB.GetClosestPoint(minA), volumeA.GetClosestPoint(volumeB.GetClosestPoint(minA)), axis, A - D);
-		std::cout << "2-A-" << volumeB.GetClosestPoint(minA) << " B-" << volumeA.GetClosestPoint(volumeB.GetClosestPoint(minA)) << "\n";
+		//std::cout << "2-A-" << volumeB.GetClosestPoint(minA) << " B-" << volumeA.GetClosestPoint(volumeB.GetClosestPoint(minA)) << "\n";
 		return  true;
-	}*/
+	}
 	return  false;
 }
 

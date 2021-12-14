@@ -251,7 +251,7 @@ void OGLRenderer::DrawDebugData() {
 		return; //don't mess with OGL state if there's no point!
 	}
 	BindShader(debugShader);
-
+	forceValidDebugState = true;
 	if (forceValidDebugState) {
 		glEnable(GL_BLEND);
 		glDisable(GL_DEPTH_TEST);

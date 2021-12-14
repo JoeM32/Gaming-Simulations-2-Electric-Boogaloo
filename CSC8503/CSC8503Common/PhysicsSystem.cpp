@@ -217,6 +217,12 @@ void PhysicsSystem::BasicCollisionDetection() {
 				//std::cout << "Collision between " << (*i)->GetName()
 				//	<< " and " << (*j)->GetName() << std::endl;
 				ImpulseResolveCollision(*info.a, *info.b, info.point);
+
+				//Debug::DrawLine(info.point.localA, info.point.localB, Vector4(1, 0, 0, 1), 0.1f);
+				//Debug::DrawLine(Vector3(0,0,0), info.point.normal., Vector4(1, 0, 0, 1), 0.1f);
+
+				//Debug::DrawLine(info.a->GetTransform().GetPosition(), info.b->GetTransform().GetPosition(), Vector4(1, 0, 0, 1), 0.1f);
+
 				//std::cout << "Collision" << std::endl;
 				info. framesLeft = numCollisionFrames;
 				/*if (allCollisions.find(info) != allCollisions.end()) {

@@ -1,9 +1,1 @@
-﻿  GameTechRenderer.cpp
-  Main.cpp
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\Main.cpp(117,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\Main.cpp(224,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\Main.cpp(331,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  StateGameObject.cpp
-  TutorialGame.cpp
-  Generating Code...
-  GameTech.vcxproj -> C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\GameTech.exe
+﻿  GameTech.vcxproj -> C:\Users\b8036881\Documents\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\GameTech.exe

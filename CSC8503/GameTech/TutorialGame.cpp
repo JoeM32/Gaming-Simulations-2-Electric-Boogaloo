@@ -277,6 +277,8 @@ void NCL::CSC8503::TutorialGame::InitOne()
 	GameObject* OBB1 = AddOBBToWorld(Vector3(0, 0.5, 0), Vector3(0,0,0), Vector3(1,1,1));
 
 	GameObject* OBB2 = AddOBBToWorld(Vector3(0, 5, 0), Vector3(0, 0, 0), Vector3(1, 1, 1));
+
+	//GameObject* OBB2 = AddSphereToWorld(Vector3(0, 5, 0), 1.0f);
 }
 
 void TutorialGame::BridgeConstraintTest() {
@@ -472,9 +474,9 @@ void TutorialGame::InitMixedGridWorld(int numRows, int numCols, float rowSpacing
 			if (rand() % 2) {
 				cubeDims.y = rand() % 3 + 0.2f;
 				GameObject* rect = AddCubeToWorld(position, cubeDims);
-				PositionAxisConstraint* constraint = new PositionAxisConstraint(rect,
-					Vector3(1,0,0));
-				world->AddConstraint(constraint);
+				//PositionAxisConstraint* constraint = new PositionAxisConstraint(rect,
+				//	Vector3(1,0,0));
+				//world->AddConstraint(constraint);
 				rect->GetTransform().SetScale(Vector3(1, 1, 1));
 			}
 			else {
@@ -610,7 +612,7 @@ StateGameObject* NCL::CSC8503::TutorialGame::AddStateObjectToWorld(const Vector3
 
 GameObject* NCL::CSC8503::TutorialGame::AddPlayerToWorld(const Vector3& position)
 {
-	GameObject* player = new Player();
+	GameObject* player = new StateGameObject();
 
 
 	player->GetTransform()

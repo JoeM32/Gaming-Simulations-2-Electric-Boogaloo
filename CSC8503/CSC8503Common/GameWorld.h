@@ -40,6 +40,7 @@ namespace NCL {
 			}
 
 			bool Raycast(Ray& r, RayCollision& closestCollision, bool closestObject = false) const;
+			bool Raycast(Ray& r, std::vector<RayCollision>& closestCollisions) const;
 
 			virtual void UpdateWorld(float dt);
 

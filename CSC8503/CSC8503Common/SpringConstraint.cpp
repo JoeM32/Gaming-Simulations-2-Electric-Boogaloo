@@ -15,4 +15,5 @@ bool NCL::CSC8503::SpringConstraint::UpdateConstraint(float dt)
 	phys2->AddForce(springDirection * (force - endDamp) * -1);
 	return true;
 
+
 }

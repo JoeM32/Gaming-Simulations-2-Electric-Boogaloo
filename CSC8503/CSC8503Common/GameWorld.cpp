@@ -109,6 +109,28 @@ bool GameWorld::Raycast(Ray& r, RayCollision& closestCollision, bool closestObje
 	return false;
 }
 
+bool GameWorld::Raycast(Ray& r, std::vector<RayCollision>& collisions) const {
+	//The simplest raycast just goes through each object and sees if there's a collision
+	RayCollision collision;
+	collisions.clear();
+
+
+	for (auto& i : gameObjects) {
+		if (!i->GetBoundingVolume()) { //objects might not be collideable etc...
+			continue;
+		}
+		RayCollision thisCollision;
+		if (CollisionDetection::RayIntersection(r, *i, thisCollision)) {
+			thisCollision.node = i;
+				collisions.emplace_back(thisCollision);
+		}
+	}
+	if (collisions.size() > 0) {
+		return true;
+	}
+	return false;
+}
+
 
 /*
 Constraint Tutorial Stuff
