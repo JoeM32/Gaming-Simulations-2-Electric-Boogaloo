@@ -288,7 +288,7 @@ void PhysicsSystem::ImpulseResolveCollision(GameObject& a, GameObject& b, Collis
 		Vector3::Cross(relativeB, p.normal), relativeB);
 	float angularEffect = Vector3::Dot(inertiaA + inertiaB, p.normal);
 
-	float cRestitution = physA->GetElasticity() > physB->GetElasticity() ? physB->GetElasticity() : physA->GetElasticity(); // disperse some kinectic energy
+	float cRestitution = physA->GetElasticity() > physB->GetElasticity() ? physA->GetElasticity() : physB->GetElasticity(); // choose highest elasciity - not realistic
 
 	float j = (-(1.0f + cRestitution) * impulseForce) /
 		(totalMass + angularEffect);

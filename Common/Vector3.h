@@ -171,6 +171,10 @@ namespace NCL {
 				o << "Vector3(" << v.x << "," << v.y << "," << v.z << ")";
 				return o;
 			}
+
+			/*std::string toString() {
+				return "(" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) +")";
+			}*/
 		};
 	}
 }

@@ -12,10 +12,10 @@
 using namespace NCL;
 using namespace CSC8503;
 
-TutorialGame::TutorialGame()	{
-	world		= new GameWorld();
-	renderer	= new GameTechRenderer(*world);
-	physics		= new PhysicsSystem(*world);
+TutorialGame::TutorialGame(GameWorld* gameworld, GameTechRenderer* renderer, PhysicsSystem* physics) : Game(gameworld, renderer, physics) {
+	world = gameworld;
+	this->renderer = renderer;
+	this->physics = physics;
 
 	forceMagnitude	= 10.0f;
 	useGravity		= false;

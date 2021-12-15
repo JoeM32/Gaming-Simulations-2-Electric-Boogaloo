@@ -138,13 +138,17 @@
     <ClInclude Include="BehaviourNodeWithChildren.h" />
     <ClInclude Include="BehaviourSelector.h" />
     <ClInclude Include="BehaviourSequence.h" />
+    <ClInclude Include="Bouncer.h" />
     <ClInclude Include="CapsuleVolume.h" />
     <ClInclude Include="HookConstraint.h" />
+    <ClInclude Include="Ice.h" />
     <ClInclude Include="NavigationGrid.h" />
     <ClInclude Include="NavigationMap.h" />
     <ClInclude Include="NavigationMesh.h" />
     <ClInclude Include="NavigationPath.h" />
     <ClInclude Include="OBBVolume.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerBall.h" />
     <ClInclude Include="PositionAxisConstraint.h" />
     <ClInclude Include="PositionConstraint.h" />
     <ClInclude Include="RotationAxisConstraint.h" />
@@ -158,8 +162,6 @@
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PhysicsSystem.h" />
-    <ClInclude Include="PushdownMachine.h" />
-    <ClInclude Include="PushdownState.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="RenderObject.h" />
@@ -169,6 +171,7 @@
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="StateTransition.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="VelocityAxisConstraint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AABBVolume.cpp" />
@@ -177,21 +180,23 @@
     <ClCompile Include="BehaviourNodeWithChildren.cpp" />
     <ClCompile Include="BehaviourSelector.cpp" />
     <ClCompile Include="BehaviourSequence.cpp" />
+    <ClCompile Include="Bouncer.cpp" />
     <ClCompile Include="CollisionDetection.cpp" />
     <ClCompile Include="CollisionVolume.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="HookConstraint.cpp" />
+    <ClCompile Include="Ice.cpp" />
     <ClCompile Include="NavigationGrid.cpp" />
     <ClCompile Include="NavigationMesh.cpp" />
     <ClCompile Include="OBBVolume.cpp" />
     <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerBall.cpp" />
     <ClCompile Include="PositionAxisConstraint.cpp" />
     <ClCompile Include="PositionConstraint.cpp" />
-    <ClCompile Include="PushdownMachine.cpp" />
-    <ClCompile Include="PushdownState.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="RotationAxisConstraint.cpp" />
@@ -202,6 +207,7 @@
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateTransition.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="VelocityAxisConstraint.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

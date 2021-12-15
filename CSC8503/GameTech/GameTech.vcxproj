@@ -141,15 +141,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameA.cpp" />
+    <ClCompile Include="GameB.cpp" />
     <ClCompile Include="GameTechRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Objective.cpp" />
+    <ClCompile Include="PushdownMachine.cpp" />
+    <ClCompile Include="PushdownState.cpp" />
     <ClCompile Include="StateGameObject.cpp" />
     <ClCompile Include="TutorialGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameA.h" />
+    <ClInclude Include="GameB.h" />
     <ClInclude Include="GameTechRenderer.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Objective.h" />
+    <ClInclude Include="PushdownMachine.h" />
+    <ClInclude Include="PushdownState.h" />
     <ClInclude Include="StateGameObject.h" />
     <ClInclude Include="TutorialGame.h" />
   </ItemGroup>

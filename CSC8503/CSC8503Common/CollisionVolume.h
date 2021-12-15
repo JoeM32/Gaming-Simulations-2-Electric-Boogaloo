@@ -32,6 +32,38 @@ namespace NCL {
 		virtual Vector3  OBBSupport(const  Vector3& axis) const; //gets closest vertex along an axis
 
 		NCL::CSC8503::Transform getTransform() const { return transform; } ;
+
+		std::string GetTypename()
+		{
+			switch (type)
+			{
+			case VolumeType::AABB:
+				return "AABB";
+				break;
+			case VolumeType::OBB:
+				return "OBB";
+				break;
+			case VolumeType::Sphere:
+				return "Sphere";
+				break;
+			case VolumeType::Mesh:
+				return "Mesh";
+				break;
+			case VolumeType::Compound:
+				return "Compound";
+				break;
+			case VolumeType::Invalid:
+				return "Invalid";
+				break;
+			case VolumeType::Capsule:
+				return "Capsule";
+				break;
+			default:
+				return "Unknown";
+			}
+		}
+
+
 	protected:
 		const NCL::CSC8503::Transform& transform;
 	};

@@ -57,12 +57,6 @@
     <ClInclude Include="State.h">
       <Filter>AI</Filter>
     </ClInclude>
-    <ClInclude Include="PushdownState.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="PushdownMachine.h">
-      <Filter>AI</Filter>
-    </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -138,6 +132,21 @@
     <ClInclude Include="HookConstraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bouncer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VelocityAxisConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerBall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameWorld.cpp">
@@ -162,12 +171,6 @@
       <Filter>AI</Filter>
     </ClCompile>
     <ClCompile Include="StateTransition.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
-    <ClCompile Include="PushdownState.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
-    <ClCompile Include="PushdownMachine.cpp">
       <Filter>AI</Filter>
     </ClCompile>
     <ClCompile Include="Debug.cpp">
@@ -231,6 +234,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HookConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bouncer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VelocityAxisConstraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerBall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

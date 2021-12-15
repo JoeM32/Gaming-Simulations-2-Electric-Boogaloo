@@ -6,17 +6,21 @@
 
 #include "../CSC8503Common/NavigationGrid.h"
 
+#include "Game.h"
+#include "GameA.h"
 #include "TutorialGame.h"
+
 #include "../CSC8503Common/BehaviourAction.h"
 #include "../CSC8503Common/BehaviourSequence.h"
 #include "../CSC8503Common/BehaviourSelector.h"
 
-#include "../CSC8503Common/PushdownState.h"
-#include "../CSC8503Common/PushdownMachine.h"
+#include "PushdownState.h"
+#include "PushdownMachine.h"
+#include "GameManager.h"
 using namespace NCL;
 using namespace CSC8503;
 
-class PauseScreen : public PushdownState {
+/*class PauseScreen : public PushdownState {
 	PushdownResult OnUpdate(float dt,
 		PushdownState** newState) override {
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::U)) {
@@ -70,28 +74,28 @@ class GameScreen : public PushdownState {
 };
 
 class IntroScreen : public PushdownState {
-	 PushdownResult OnUpdate(float dt,
-		 PushdownState * *newState) override {
-		 if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::SPACE)) {
-			 * newState = new GameScreen();
-			 return PushdownResult::Push;
-			
+	PushdownResult OnUpdate(float dt, PushdownState** newState) override 
+	{
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::SPACE)) {
+			*newState = new GameScreen();
+			return PushdownResult::Push;
+
 		}
-		 if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
-			 return PushdownResult::Pop;
-			
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
+			return PushdownResult::Pop;
+
 		}
-		 return PushdownResult::NoChange;
-		
+		return PushdownResult::NoChange;
+
 	};
 
-	 void OnAwake() override {
-		  std::cout << "Welcome to a really awesome game!\n";
-		  std::cout << "Press Space To Begin or escape to quit!\n";
-		 
-	 }
+	void OnAwake() override {
+		std::cout << "Welcome to a really awesome game!\n";
+		std::cout << "Press Space To Begin or escape to quit!\n";
 
-	 
+	}
+
+
 };
 
 void TestPushdownAutomata(Window* w) {
@@ -105,7 +109,7 @@ void TestPushdownAutomata(Window* w) {
 
 	}
 
-}
+}*/
 
 void TestBehaviourTree() {
 	float behaviourTimer;
@@ -340,9 +344,11 @@ int main() {
 
 	//TestBehaviourTree();
 
-	TutorialGame* g = new TutorialGame();
+	GameManager* g = new GameManager();
+	//g->loadGameA();
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
-	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
+	bool exitted = false;
+	while (w->UpdateWindow() && !exitted) {
 
 		//DisplayPathfinding();
 
@@ -364,7 +370,8 @@ int main() {
 
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
-		g->UpdateGame(dt);
+		exitted = g->UpdateGame(dt);
 	}
+	delete g;
 	Window::DestroyGameWindow();
 }

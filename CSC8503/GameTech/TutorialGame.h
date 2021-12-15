@@ -2,15 +2,16 @@
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
 #include "StateGameObject.h"
+#include "Game.h"
 
 namespace NCL {
 	namespace CSC8503 {
-		class TutorialGame		{
+		class TutorialGame : public Game		{
 		public:
-			TutorialGame();
+			TutorialGame(GameWorld* gameworld, GameTechRenderer* renderer, PhysicsSystem* physics);
 			~TutorialGame();
 
-			virtual void UpdateGame(float dt);
+			virtual void UpdateGame(float dt) override;
 
 		protected:
 			void InitialiseAssets();

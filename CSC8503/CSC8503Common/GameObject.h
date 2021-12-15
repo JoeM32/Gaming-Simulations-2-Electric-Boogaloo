@@ -6,6 +6,9 @@
 #include "RenderObject.h"
 
 #include <vector>
+#include <sstream>
+#include <iomanip>
+
 
 using std::vector;
 
@@ -68,6 +71,13 @@ namespace NCL {
 			virtual void OnCollisionEnd(GameObject* otherObject) {
 				//std::cout << "OnCollisionEnd event occured!\n";
 			}
+
+			virtual bool OnClick(std::string& information) {
+				information = "Not clickable";
+				return false;
+			}
+
+			virtual std::string OnDebug();
 
 			bool GetBroadphaseAABB(Vector3&outsize) const;
 

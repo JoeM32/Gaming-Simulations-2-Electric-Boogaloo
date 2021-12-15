@@ -18,6 +18,22 @@ GameObject::~GameObject()	{
 	delete renderObject;
 }
 
+std::string NCL::CSC8503::GameObject::OnDebug()
+{
+	std::stringstream ss;
+	//ss << std::fixed << std::setprecision(2) << number;
+	if (this->boundingVolume)
+	{
+		ss << this->boundingVolume->GetTypename();
+	}
+	else
+	{
+		ss << "No Volume";
+	}
+	ss << "- pos:" << this->transform.GetPosition() << ", rot:" << this->transform.GetOrientation().ToEuler();
+	return ss.str();
+}
+
 bool GameObject::GetBroadphaseAABB(Vector3&outSize) const {
 	if (!boundingVolume) {
 		return false;
