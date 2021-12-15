@@ -8,6 +8,8 @@
 #include "../CSC8503Common/RotationConstraint.h"
 #include "../CSC8503Common/PositionAxisConstraint.h"
 #include "../CSC8503Common/RotationAxisConstraint.h"
+#include "../CSC8503Common/Player.h"
+#include "../CSC8503Common/PowerUp.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -25,6 +27,28 @@ GameB::GameB(GameWorld* gameworld, GameTechRenderer* renderer, PhysicsSystem* ph
 	InitialiseAssets();
 
 
+}
+
+void NCL::CSC8503::GameB::CameraLook()
+{
+	Vector3 objPos = player->GetTransform().GetPosition();
+	Vector3 camPos = objPos + lockedOffset;
+
+	Matrix4 temp = Matrix4::BuildViewMatrix(camPos, objPos, Vector3(0, 1, 0));
+
+	Matrix4 modelMat = temp.Inverse();
+
+	Quaternion q(modelMat);
+	Vector3 angles = q.ToEuler(); //nearly there now!
+
+	world->GetMainCamera()->SetPosition(camPos);
+	world->GetMainCamera()->SetPitch(angles.x);
+	world->GetMainCamera()->SetYaw(angles.y);
+
+}
+
+void NCL::CSC8503::GameB::BonusAccquired()
+{
 }
 
 /*
@@ -71,11 +95,11 @@ GameB::~GameB() {
 }
 
 void GameB::UpdateGame(float dt) {
-	if (!inSelectionMode) {
+	/*if (!inSelectionMode) {
 		world->GetMainCamera()->UpdateCamera(dt);
-	}
+	}*/
 
-	UpdateKeys();
+	//UpdateKeys();
 
 	/*if (useGravity) {
 		Debug::Print("(G)ravity on", Vector2(5, 95));
@@ -87,11 +111,9 @@ void GameB::UpdateGame(float dt) {
 	//SelectObject();
 	//MoveSelectedObject();
 
-	DebugObjects();
-	ClickObjects();
+	//DebugObjects();
+	//ClickObjects();
 	physics->Update(dt);
-
-	renderer->DrawString(debugText, Vector2(5, 80));
 
 	/*if (lockedObject != nullptr) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
@@ -112,6 +134,7 @@ void GameB::UpdateGame(float dt) {
 	}*/
 
 	world->UpdateWorld(dt);
+	CameraLook();
 	renderer->Update(dt);
 
 	Debug::FlushRenderables(dt);
@@ -122,6 +145,8 @@ void GameB::UpdateGame(float dt) {
 	/*if (testStateObject) {
 		testStateObject->Update(dt);
 	}*/
+
+
 }
 
 void GameB::UpdateKeys() {
@@ -265,7 +290,8 @@ void GameB::InitWorld() {
 	//InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	//InitGameExamples();
 	InitDefaultFloor();
-	InitOne();
+	//InitOne();
+	AddPlayerToWorld(Vector3(0, 2, 0));
 	//CreateMap();
 	//BridgeConstraintTest();
 
@@ -540,39 +566,6 @@ void GameB::InitGameExamples() {
 	AddBonusToWorld(Vector3(10, 5, 0));
 }
 
-/*GameObject* GameB::AddPlayerToWorld(const Vector3& position) {
-	float meshSize = 3.0f;
-	float inverseMass = 0.5f;
-
-	GameObject* character = new GameObject();
-
-
-
-	character->GetTransform()
-		.SetScale(Vector3(meshSize, meshSize, meshSize))
-		.SetPosition(position);
-
-	AABBVolume* volume = new AABBVolume(character->GetTransform());
-	character->SetBoundingVolume((CollisionVolume*)volume);
-
-	if (rand() % 2) {
-		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMeshA, nullptr, basicShader));
-	}
-	else {
-		character->SetRenderObject(new RenderObject(&character->GetTransform(), charMeshB, nullptr, basicShader));
-	}
-	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
-
-	character->GetPhysicsObject()->SetInverseMass(inverseMass);
-	character->GetPhysicsObject()->InitSphereInertia();
-
-	world->AddGameObject(character);
-
-	//lockedObject = character;
-
-	return character;
-}*/
-
 GameObject* GameB::AddEnemyToWorld(const Vector3& position) {
 	float meshSize = 3.0f;
 	float inverseMass = 0.5f;
@@ -599,8 +592,8 @@ GameObject* GameB::AddEnemyToWorld(const Vector3& position) {
 	return character;
 }
 
-GameObject* GameB::AddBonusToWorld(const Vector3& position) {
-	GameObject* apple = new GameObject();
+GameObject* GameB::AddBonusToWorld(const Vector3& position, PowerUpType type) {
+	GameObject* apple = new PowerUp(type, this);
 
 
 	apple->GetTransform()
@@ -646,7 +639,7 @@ StateGameObject* NCL::CSC8503::GameB::AddStateObjectToWorld(const Vector3& posit
 
 GameObject* NCL::CSC8503::GameB::AddPlayerToWorld(const Vector3& position)
 {
-	GameObject* player = new StateGameObject();
+	player = new Player(world);
 
 
 	player->GetTransform()
@@ -661,7 +654,7 @@ GameObject* NCL::CSC8503::GameB::AddPlayerToWorld(const Vector3& position)
 
 	player->GetPhysicsObject()->SetInverseMass(1.0f);
 	player->GetPhysicsObject()->InitSphereInertia();
-
+	player->GetPhysicsObject()->SetDamping(5);
 	world->AddGameObject(player);
 
 	return player;

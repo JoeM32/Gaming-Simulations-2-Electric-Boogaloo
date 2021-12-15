@@ -44,6 +44,10 @@ namespace NCL {
 				Debug::FlushRenderables(dt);
 				renderer->Render();
 			};
+
+			virtual void BonusAccquired() {}
+			{}
+
 		private://yes this is double references. This class was not built to work like this, but the menu has forced my hand at the eleventh hour.
 			GameWorld* gameworld;
 			GameTechRenderer* renderer;

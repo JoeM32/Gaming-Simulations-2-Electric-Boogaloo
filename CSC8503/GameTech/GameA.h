@@ -15,7 +15,7 @@ namespace NCL {
 
 		protected:
 			void InitialiseAssets();
-
+			void BonusAccquired() override;
 			void InitCamera();
 			void UpdateKeys();
 
@@ -39,6 +39,8 @@ namespace NCL {
 			void MoveSelectedObject();
 			void DebugObjectMovement();
 			void LockedObjectMovement();
+			 
+			void EndGame();
 
 			GameObject* AddFloorToWorld(const Vector3& position);
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
@@ -57,6 +59,8 @@ namespace NCL {
 
 			bool useGravity;
 			bool inSelectionMode;
+
+			bool endGame = false;
 
 			float		forceMagnitude;
 
@@ -85,6 +89,10 @@ namespace NCL {
 
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
 			StateGameObject* testStateObject;
+
+
+			float timer;
+			int itemsLeft;
 
 		};
 	}

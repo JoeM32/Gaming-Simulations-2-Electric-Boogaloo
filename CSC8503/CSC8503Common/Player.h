@@ -1,19 +1,25 @@
 #pragma once
 #include "..\CSC8503Common\GameObject.h"
+#include "../../Common/Window.h"
+#include "GameWorld.h"
+
 namespace NCL {
 	namespace CSC8503 {
 
 		class Player : public GameObject {
 		public:
-			Player();
+			Player(GameWorld* world);
 			~Player();
 
 			virtual void Update(float dt);
 
-			virtual void OnCollisionStay(GameObject* otherObject) override;
+			virtual void OnCollisionBegin(GameObject* otherObject) override;
 
 			virtual std::string OnDebug() override;
 		protected:
+
+			GameWorld* world;
+
 			class MovementState;
 
 			MovementState* currentState;

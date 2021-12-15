@@ -151,6 +151,7 @@
     <ClInclude Include="PlayerBall.h" />
     <ClInclude Include="PositionAxisConstraint.h" />
     <ClInclude Include="PositionConstraint.h" />
+    <ClInclude Include="PowerUp.h" />
     <ClInclude Include="RotationAxisConstraint.h" />
     <ClInclude Include="RotationConstraint.h" />
     <ClInclude Include="SphereVolume.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="PlayerBall.cpp" />
     <ClCompile Include="PositionAxisConstraint.cpp" />
     <ClCompile Include="PositionConstraint.cpp" />
+    <ClCompile Include="PowerUp.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="RotationAxisConstraint.cpp" />

@@ -14,6 +14,8 @@ namespace NCL {
 			virtual void UpdateGame(float dt) override;
 
 		protected:
+			void CameraLook();
+			void BonusAccquired() override;
 			void InitialiseAssets();
 
 			void InitCamera();
@@ -49,7 +51,7 @@ namespace NCL {
 
 			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddEnemyToWorld(const Vector3& position);
-			GameObject* AddBonusToWorld(const Vector3& position);
+			GameObject* AddBonusToWorld(const Vector3& position, PowerUpType type);
 
 			GameTechRenderer* renderer;
 			PhysicsSystem* physics;
@@ -78,7 +80,7 @@ namespace NCL {
 
 			//Coursework Additional functionality	
 			GameObject* lockedObject = nullptr;
-			Vector3 lockedOffset = Vector3(0, 14, 20);
+			Vector3 lockedOffset = Vector3(0, 14*5, 20*5);
 			void LockCameraToObject(GameObject* o) {
 				lockedObject = o;
 			}
@@ -86,6 +88,7 @@ namespace NCL {
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
 			StateGameObject* testStateObject;
 
+			GameObject* player;
 		};
 	}
 }

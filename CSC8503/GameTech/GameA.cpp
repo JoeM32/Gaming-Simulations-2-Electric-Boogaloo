@@ -8,6 +8,7 @@
 #include "../CSC8503Common/RotationConstraint.h"
 #include "../CSC8503Common/PositionAxisConstraint.h"
 #include "../CSC8503Common/RotationAxisConstraint.h"
+#include "../CSC8503Common/PowerUp.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -20,6 +21,9 @@ GameA::GameA(GameWorld* gameworld, GameTechRenderer* renderer, PhysicsSystem* ph
 	forceMagnitude = 10.0f;
 	useGravity = true;
 	inSelectionMode = false;
+
+	timer = 0;
+	itemsLeft = 3;
 
 	//Debug::SetRenderer(renderer);
 	InitialiseAssets();
@@ -56,6 +60,15 @@ void GameA::InitialiseAssets() {
 	InitWorld();
 }
 
+void NCL::CSC8503::GameA::BonusAccquired()
+{
+	itemsLeft -= 1;
+	if (itemsLeft == 0)
+	{
+		EndGame();
+	}
+}
+
 GameA::~GameA() {
 	delete cubeMesh;
 	delete sphereMesh;
@@ -71,11 +84,23 @@ GameA::~GameA() {
 }
 
 void GameA::UpdateGame(float dt) {
-	if (!inSelectionMode) {
+
+
+	if (!endGame)
+	{
 		world->GetMainCamera()->UpdateCamera(dt);
+		timer += dt;
+		DebugObjects();
+		ClickObjects();
+		UpdateKeys();
+	}
+	else
+	{
+		renderer->DrawString("You won in " + std::to_string(timer), Vector2(30, 30));
+		renderer->DrawString("Esc to return to level select", Vector2(30, 50));
 	}
 
-	UpdateKeys();
+	
 
 	/*if (useGravity) {
 		Debug::Print("(G)ravity on", Vector2(5, 95));
@@ -87,8 +112,7 @@ void GameA::UpdateGame(float dt) {
 	//SelectObject();
 	//MoveSelectedObject();
 
-	DebugObjects();
-	ClickObjects();
+	
 	physics->Update(dt);
 
 	renderer->DrawString(debugText, Vector2(5, 80));
@@ -204,6 +228,11 @@ void GameA::LockedObjectMovement() {
 	if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NEXT)) {
 		lockedObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
 	}
+}
+
+void NCL::CSC8503::GameA::EndGame()
+{
+	endGame = true;
 }
 
 void GameA::DebugObjectMovement() {
@@ -600,25 +629,25 @@ GameObject* GameA::AddEnemyToWorld(const Vector3& position) {
 }
 
 GameObject* GameA::AddBonusToWorld(const Vector3& position) {
-	GameObject* apple = new GameObject();
+	GameObject* bonus = new PowerUp(PowerUpType::Bonus, this);
 
 
-	apple->GetTransform()
+	bonus->GetTransform()
 		.SetScale(Vector3(0.25, 0.25, 0.25))
 		.SetPosition(position);
 
-	SphereVolume* volume = new SphereVolume(apple->GetTransform());
-	apple->SetBoundingVolume((CollisionVolume*)volume);
+	SphereVolume* volume = new SphereVolume(bonus->GetTransform());
+	bonus->SetBoundingVolume((CollisionVolume*)volume);
 
-	apple->SetRenderObject(new RenderObject(&apple->GetTransform(), bonusMesh, nullptr, basicShader));
-	apple->SetPhysicsObject(new PhysicsObject(&apple->GetTransform(), apple->GetBoundingVolume()));
+	bonus->SetRenderObject(new RenderObject(&bonus->GetTransform(), bonusMesh, nullptr, basicShader));
+	bonus->SetPhysicsObject(new PhysicsObject(&bonus->GetTransform(), bonus->GetBoundingVolume()));
 
-	apple->GetPhysicsObject()->SetInverseMass(1.0f);
-	apple->GetPhysicsObject()->InitSphereInertia();
+	bonus->GetPhysicsObject()->SetInverseMass(1.0f);
+	bonus->GetPhysicsObject()->InitSphereInertia();
 
-	world->AddGameObject(apple);
+	world->AddGameObject(bonus);
 
-	return apple;
+	return bonus;
 }
 
 StateGameObject* NCL::CSC8503::GameA::AddStateObjectToWorld(const Vector3& position)

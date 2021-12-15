@@ -16,7 +16,7 @@ void NCL::CSC8503::PlayerBall::Update(float dt)
 
 void NCL::CSC8503::PlayerBall::OnCollisionStay(GameObject* otherObject)
 {
-	this-> GetPhysicsObject()->SetDamping(0.4);
+	this-> GetPhysicsObject()->SetDamping(0.5);
 	Ice* ice = dynamic_cast <Ice*> (otherObject);
 	if (ice)
 	{

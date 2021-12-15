@@ -52,7 +52,7 @@ namespace NCL {
 				return damping;
 			}
 
-			void SetDamping(float elasticity)
+			void SetDamping(float damping)
 			{
 				this->damping = damping;
 			}

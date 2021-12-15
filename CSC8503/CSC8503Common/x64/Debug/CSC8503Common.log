@@ -1,4 +1,29 @@
-﻿  PlayerBall.cpp
+﻿  AABBVolume.cpp
+  Bouncer.cpp
+  CollisionDetection.cpp
+  CollisionVolume.cpp
+  GameObject.cpp
+  GameWorld.cpp
+  HookConstraint.cpp
+  Ice.cpp
+  OBBVolume.cpp
+  PhysicsObject.cpp
+C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\PhysicsObject.cpp(13,15): warning C4305: '=': truncation from 'double' to 'float'
+  PhysicsSystem.cpp
+  Player.cpp
+  PlayerBall.cpp
 C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\PlayerBall.cpp(19,43): warning C4305: 'argument': truncation from 'double' to 'float'
 C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\PlayerBall.cpp(23,46): warning C4305: 'argument': truncation from 'double' to 'float'
+  PositionAxisConstraint.cpp
+  PositionConstraint.cpp
+  QuadTree.cpp
+  RotationAxisConstraint.cpp
+  RotationConstraint.cpp
+  SphereVolume.cpp
+  SpinConstraint.cpp
+  Generating Code...
+  Compiling...
+  SpringConstraint.cpp
+  VelocityAxisConstraint.cpp
+  Generating Code...
   CSC8503Common.vcxproj -> C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\CSC8503Common.lib
