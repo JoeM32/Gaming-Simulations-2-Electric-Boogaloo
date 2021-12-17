@@ -6,9 +6,9 @@ namespace NCL {
 		class Objective : public GameObject
 		{
 		public:
-			Objective();
-			~Objective();
-			virtual std::string OnDebug() override;
+			//Objective();
+			//~Objective();
+			//virtual std::string OnDebug() override;
 
 
 

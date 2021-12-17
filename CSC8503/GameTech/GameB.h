@@ -1,6 +1,9 @@
 #pragma once
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
+#include "../CSC8503Common/PowerUp.h"
+#include "../CSC8503Common/Player.h"
+#include "../CSC8503Common/Enemy.h"
 #include "StateGameObject.h"
 #include "Game.h"
 
@@ -14,8 +17,9 @@ namespace NCL {
 			virtual void UpdateGame(float dt) override;
 
 		protected:
+			int score;
+
 			void CameraLook();
-			void BonusAccquired() override;
 			void InitialiseAssets();
 
 			void InitCamera();
@@ -27,7 +31,6 @@ namespace NCL {
 
 			void CreateMap();
 
-			void InitGameExamples();
 
 			void InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius);
 			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
@@ -49,9 +52,11 @@ namespace NCL {
 
 			GameObject* AddCapsuleToWorld(const Vector3& position, float halfHeight, float radius, float inverseMass = 10.0f);
 
-			GameObject* AddPlayerToWorld(const Vector3& position);
-			GameObject* AddEnemyToWorld(const Vector3& position);
-			GameObject* AddBonusToWorld(const Vector3& position, PowerUpType type);
+			GameObject* AddPlayerToWorld();
+			GameObject* AddEnemyToWorld();
+			GameObject* AddPointToWorld(const Vector3& position);
+			GameObject* AddPowerUpToWorld(const Vector3& position);
+			//GameObject* AddBonusToWorld(const Vector3& position, PowerUpType type);
 
 			GameTechRenderer* renderer;
 			PhysicsSystem* physics;
@@ -88,7 +93,15 @@ namespace NCL {
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
 			StateGameObject* testStateObject;
 
-			GameObject* player;
+			Player* player;
+			Enemy* enemy;
+
+			std::vector<PowerUp*> powerUps;
+
+			Vector3 playerSpawn;
+			Vector3 enemySpawn;
+
+			int Score;
 		};
 	}
 }

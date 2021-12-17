@@ -332,6 +332,10 @@ bool CollisionDetection::ObjectIntersection(GameObject* a, GameObject* b, Collis
 	const CollisionVolume* volA = a->GetBoundingVolume();
 	const CollisionVolume* volB = b->GetBoundingVolume();
 
+	if (volA->GetClipping() && volB->GetClipping()) {
+		return false;
+	}
+
 	if (!volA || !volB) {
 		return false;
 	}

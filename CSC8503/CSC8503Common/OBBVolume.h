@@ -2,7 +2,7 @@
 #include "CollisionVolume.h"
 #include "../../Common/Vector3.h"
 namespace NCL {
-	class OBBVolume : CollisionVolume
+	class OBBVolume : public  CollisionVolume
 	{
 	public:
 		OBBVolume(const NCL::CSC8503::Transform& t) : CollisionVolume(t) {

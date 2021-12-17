@@ -6,8 +6,10 @@ namespace NCL {
 		class Ice : public GameObject 
 		{
 		public:
-			Ice();
-			~Ice();
+			Ice()
+			{
+				name = "Ice";
+			}
 			virtual std::string OnDebug() override;
 
 

@@ -9,6 +9,7 @@ bool NCL::CSC8503::VelocityAxisConstraint::UpdateConstraint(float dt)
 	PhysicsObject* physOb = object->GetPhysicsObject();
 
 	Vector3 velocity = physOb->GetLinearVelocity();
+	//std::cout << velocity;
 	physOb->SetLinearVelocity(axis.Normalised()*(Vector3::Dot(velocity,axis)/axis.Length()));
 	return true;
 }

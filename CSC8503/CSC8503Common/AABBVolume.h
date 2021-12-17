@@ -4,7 +4,7 @@
 #include "../../Common/Vector3.h"
 
 namespace NCL {
-	class AABBVolume : CollisionVolume
+	class AABBVolume : public CollisionVolume
 	{
 	public:
 		AABBVolume(const NCL::CSC8503::Transform& t) : CollisionVolume(t){

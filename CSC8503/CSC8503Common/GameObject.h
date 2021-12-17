@@ -15,6 +15,12 @@ using std::vector;
 namespace NCL {
 	namespace CSC8503 {
 
+		enum class PowerUpType {
+			Confusion = 1,
+			Grapple = 2,
+			Freeze = 4,
+		};
+
 		class GameObject	{
 		public:
 			GameObject(string name = "");

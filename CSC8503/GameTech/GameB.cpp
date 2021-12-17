@@ -10,6 +10,8 @@
 #include "../CSC8503Common/RotationAxisConstraint.h"
 #include "../CSC8503Common/Player.h"
 #include "../CSC8503Common/PowerUp.h"
+#include "../CSC8503Common/Enemy.h"
+#include "../CSC8503Common/PointToken.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -23,9 +25,12 @@ GameB::GameB(GameWorld* gameworld, GameTechRenderer* renderer, PhysicsSystem* ph
 	useGravity = true;
 	inSelectionMode = false;
 
+	enemySpawn = Vector3(50, 2, 50);
+	playerSpawn = Vector3(-50, 2, -50);
+
+	score = 0;
 	//Debug::SetRenderer(renderer);
 	InitialiseAssets();
-
 
 }
 
@@ -47,9 +52,6 @@ void NCL::CSC8503::GameB::CameraLook()
 
 }
 
-void NCL::CSC8503::GameB::BonusAccquired()
-{
-}
 
 /*
 
@@ -290,8 +292,11 @@ void GameB::InitWorld() {
 	//InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	//InitGameExamples();
 	InitDefaultFloor();
-	//InitOne();
-	AddPlayerToWorld(Vector3(0, 2, 0));
+	InitOne();
+	AddPlayerToWorld();
+	AddEnemyToWorld();
+	player->SetEnemy(enemy);
+	enemy->SetPlayer(player);
 	//CreateMap();
 	//BridgeConstraintTest();
 
@@ -560,39 +565,10 @@ void GameB::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(0, -2, 0));
 }
 
-void GameB::InitGameExamples() {
-	AddPlayerToWorld(Vector3(0, 5, 0));
-	AddEnemyToWorld(Vector3(5, 5, 0));
-	AddBonusToWorld(Vector3(10, 5, 0));
-}
-
-GameObject* GameB::AddEnemyToWorld(const Vector3& position) {
-	float meshSize = 3.0f;
-	float inverseMass = 0.5f;
-
-	GameObject* character = new GameObject();
 
 
 
-	character->GetTransform()
-		.SetScale(Vector3(meshSize, meshSize, meshSize))
-		.SetPosition(position);
-
-	AABBVolume* volume = new AABBVolume(character->GetTransform());
-	character->SetBoundingVolume((CollisionVolume*)volume);
-
-	character->SetRenderObject(new RenderObject(&character->GetTransform(), enemyMesh, nullptr, basicShader));
-	character->SetPhysicsObject(new PhysicsObject(&character->GetTransform(), character->GetBoundingVolume()));
-
-	character->GetPhysicsObject()->SetInverseMass(inverseMass);
-	character->GetPhysicsObject()->InitSphereInertia();
-
-	world->AddGameObject(character);
-
-	return character;
-}
-
-GameObject* GameB::AddBonusToWorld(const Vector3& position, PowerUpType type) {
+/*GameObject* GameB::AddBonusToWorld(const Vector3& position, PowerUpType type) {
 	GameObject* apple = new PowerUp(type, this);
 
 
@@ -612,7 +588,7 @@ GameObject* GameB::AddBonusToWorld(const Vector3& position, PowerUpType type) {
 	world->AddGameObject(apple);
 
 	return apple;
-}
+}*/
 
 StateGameObject* NCL::CSC8503::GameB::AddStateObjectToWorld(const Vector3& position)
 {
@@ -637,14 +613,15 @@ StateGameObject* NCL::CSC8503::GameB::AddStateObjectToWorld(const Vector3& posit
 	return apple;
 }
 
-GameObject* NCL::CSC8503::GameB::AddPlayerToWorld(const Vector3& position)
+GameObject* NCL::CSC8503::GameB::AddPlayerToWorld()
 {
-	player = new Player(world);
+	player = new Player(world, score);
 
+	std::cout << playerSpawn;
 
 	player->GetTransform()
 		.SetScale(Vector3(3, 3, 3))
-		.SetPosition(position);
+		.SetPosition(playerSpawn + Vector3(0,2,0));
 
 	SphereVolume* volume = new SphereVolume(player->GetTransform());
 	player->SetBoundingVolume((CollisionVolume*)volume);
@@ -658,6 +635,77 @@ GameObject* NCL::CSC8503::GameB::AddPlayerToWorld(const Vector3& position)
 	world->AddGameObject(player);
 
 	return player;
+}
+
+GameObject* GameB::AddEnemyToWorld() {
+	enemy = new Enemy(powerUps);
+
+	std::cout << playerSpawn;
+
+	enemy->GetTransform()
+		.SetScale(Vector3(3, 3, 3))
+		.SetPosition(enemySpawn + Vector3(0, 2, 0));
+
+	SphereVolume* volume = new SphereVolume(enemy->GetTransform());
+	enemy->SetBoundingVolume((CollisionVolume*)volume);
+
+	enemy->SetRenderObject(new RenderObject(&enemy->GetTransform(), sphereMesh, nullptr, basicShader));
+	enemy->SetPhysicsObject(new PhysicsObject(&enemy->GetTransform(), enemy->GetBoundingVolume()));
+
+	enemy->GetPhysicsObject()->SetInverseMass(1.0f);
+	enemy->GetPhysicsObject()->InitSphereInertia();
+	enemy->GetPhysicsObject()->SetDamping(5);
+	world->AddGameObject(enemy);
+
+	return enemy;
+}
+
+GameObject* NCL::CSC8503::GameB::AddPointToWorld(const Vector3& position)
+{
+	GameObject* bonus = new PointToken(world, score);
+
+
+	bonus->GetTransform()
+		.SetScale(Vector3(3, 3, 3))
+		.SetPosition(position);
+
+	SphereVolume* volume = new SphereVolume(bonus->GetTransform());
+	volume->SetClipping(true);
+	bonus->SetBoundingVolume((CollisionVolume*)volume);
+
+	bonus->SetRenderObject(new RenderObject(&bonus->GetTransform(), sphereMesh, nullptr, basicShader));
+	bonus->SetPhysicsObject(new PhysicsObject(&bonus->GetTransform(), bonus->GetBoundingVolume()));
+	bonus->GetRenderObject()->SetColour(Vector4(1, 1, 0, 0.6));
+	bonus->GetPhysicsObject()->SetInverseMass(0.0f);
+	bonus->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(bonus);
+
+	return bonus;
+}
+
+GameObject* NCL::CSC8503::GameB::AddPowerUpToWorld(const Vector3& position)
+{
+	int random = rand() % 2;
+	PowerUp* bonus = new PowerUp(random == 0 ? PowerUpType::Confusion : PowerUpType::Freeze,world, powerUps);
+	powerUps.push_back(bonus);
+	bonus->GetTransform()
+		.SetScale(Vector3(3, 3, 3))
+		.SetPosition(position);
+
+	SphereVolume* volume = new SphereVolume(bonus->GetTransform());
+	volume->SetClipping(true);
+	bonus->SetBoundingVolume((CollisionVolume*)volume);
+
+	bonus->SetRenderObject(new RenderObject(&bonus->GetTransform(), sphereMesh, nullptr, basicShader));
+	bonus->SetPhysicsObject(new PhysicsObject(&bonus->GetTransform(), bonus->GetBoundingVolume()));
+	bonus->GetRenderObject()->SetColour(random == 0 ? Vector4(0.5,0.3,1,0.6) : Vector4(0,0,1,0.6));
+	bonus->GetPhysicsObject()->SetInverseMass(0.0f);
+	bonus->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(bonus);
+
+	return bonus;
 }
 
 /*

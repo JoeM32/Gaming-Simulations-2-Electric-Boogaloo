@@ -1,29 +1,23 @@
 #pragma once
 #include "..\CSC8503Common\GameObject.h"
-#include "..\CSC8503Common\Player.h"
-#include "../../Common/Window.h"
-#include "../GameTech/Game.h"
-
+#include "GameWorld.h"
 
 namespace NCL {
 	namespace CSC8503 {
 
-		enum class PowerUpType {
-			Confusion = 1,
-			Grapple = 2,
-			Bonus = 4,
-			Freeze = 8,
-		};
+		class Player;
+		class Enemy;
+
 
 		class PowerUp : public GameObject {
 		public:
-			PowerUp(PowerUpType type, Game* game)
+			PowerUp(PowerUpType type, GameWorld* game, std::vector<PowerUp*>& powerUps) : powerUps(powerUps)
 			{
 				this->type = type;
-				this->game = game;//this is now hilariously bad, making the game depend on powerups lmao. needs must when the devil drives - i.e. doing 20 credit module 100% coursework in a week and a half. This will never, ever, ever go on my portfolio thank god
+				this->world = game;//this is now hilariously bad, making the game depend on powerups lmao. needs must when the devil drives - i.e. doing 20 credit module 100% coursework in a week and a half. This will never, ever, ever go on my portfolio thank god
 			}
 
-			void OnCollisionBegin(GameObject* otherObject) override;
+			void OnCollisionBegin(NCL::CSC8503::GameObject* otherObject) override;
 
 			PowerUpType GetType()
 			{
@@ -31,7 +25,8 @@ namespace NCL {
 			}
 		protected:
 			PowerUpType type;
-			Game* game;
+			GameWorld* world;
+			std::vector<PowerUp*>& powerUps;
 		};
 	}
 }

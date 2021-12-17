@@ -3,7 +3,7 @@
 #include "Transform.h"
 
 namespace NCL {
-	class SphereVolume : CollisionVolume
+	class SphereVolume : public CollisionVolume
 	{
 	public:
 		SphereVolume(const NCL::CSC8503::Transform& t) : CollisionVolume(t) {

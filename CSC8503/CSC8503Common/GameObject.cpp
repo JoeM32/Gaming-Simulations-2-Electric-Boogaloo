@@ -22,6 +22,7 @@ std::string NCL::CSC8503::GameObject::OnDebug()
 {
 	std::stringstream ss;
 	//ss << std::fixed << std::setprecision(2) << number;
+	ss << name << " ";
 	if (this->boundingVolume)
 	{
 		ss << this->boundingVolume->GetTypename();
@@ -31,6 +32,7 @@ std::string NCL::CSC8503::GameObject::OnDebug()
 		ss << "No Volume";
 	}
 	ss << "- pos:" << this->transform.GetPosition() << ", rot:" << this->transform.GetOrientation().ToEuler();
+	ss << "\n";
 	return ss.str();
 }
 

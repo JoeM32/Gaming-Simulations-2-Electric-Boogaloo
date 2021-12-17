@@ -15,7 +15,6 @@ namespace NCL {
 
 		protected:
 			void InitialiseAssets();
-			void BonusAccquired() override;
 			void InitCamera();
 			void UpdateKeys();
 
@@ -40,33 +39,40 @@ namespace NCL {
 			void DebugObjectMovement();
 			void LockedObjectMovement();
 			 
-			void EndGame();
+
+
 
 			GameObject* AddFloorToWorld(const Vector3& position);
-			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);
-			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f);
+			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f, bool clipping = false);
+			GameObject* AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 10.0f, bool clipping = false);
+			GameObject* AddIceToWorld(const Vector3& position, Vector3 dimensions, float inverseMass = 0.0f);
+			GameObject* AddBouncerToWorld(const Vector3& position, Vector3 axis, float size);
 			GameObject* AddOBBToWorld(const Vector3& position, Vector3 rotation, Vector3 dimensions, float inverseMass = 10.0f);
 
 			GameObject* AddCapsuleToWorld(const Vector3& position, float halfHeight, float radius, float inverseMass = 10.0f);
 
 			GameObject* AddPlayerToWorld(const Vector3& position);
 			GameObject* AddEnemyToWorld(const Vector3& position);
-			GameObject* AddBonusToWorld(const Vector3& position);
+			GameObject* AddPointToWorld(const Vector3& position);
 
 			GameTechRenderer* renderer;
 			PhysicsSystem* physics;
 			GameWorld* world;
 
+			GameObject* player;
+			Vector3 spawn;
+
 			bool useGravity;
 			bool inSelectionMode;
 
-			bool endGame = false;
+			int score;
 
 			float		forceMagnitude;
 
 			GameObject* selectionObject = nullptr;
 
 			std::string debugText = "Right Click to Debug";
+			std::string clickText = "";
 
 			OGLMesh* capsuleMesh = nullptr;
 			OGLMesh* cubeMesh = nullptr;
@@ -92,7 +98,6 @@ namespace NCL {
 
 
 			float timer;
-			int itemsLeft;
 
 		};
 	}

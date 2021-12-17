@@ -1,7 +1,8 @@
 #include "Player.h"
 #include "PowerUp.h"
+#include "Enemy.h"
 
-NCL::CSC8503::Player::Player(GameWorld* world)
+NCL::CSC8503::Player::Player(GameWorld* world, int& score) : score(score)
 {
 	this->world = world;
 	frozenState = new Frozen(this);
@@ -15,6 +16,29 @@ NCL::CSC8503::Player::~Player()
 {
 }
 
+void NCL::CSC8503::Player::ApplyEffect(PowerUpType type)
+{
+	auto state = normal;
+	switch (type)
+	{
+	case PowerUpType::Confusion:
+		state = confusedState;
+		break;
+	case PowerUpType::Grapple:
+		state = grapplestate;
+		break;
+	case PowerUpType::Freeze:
+		state = frozenState;
+		break;
+	default:
+		break;
+	};
+
+	currentState->Exit();
+	currentState = state;
+	currentState->Enter();
+}
+
 void NCL::CSC8503::Player::Update(float dt)
 {
 	currentState->Update(dt);
@@ -25,27 +49,13 @@ void NCL::CSC8503::Player::OnCollisionBegin(GameObject* otherObject)
 	PowerUp* power = dynamic_cast <PowerUp*> (otherObject);
 	if (power)
 	{
-		auto state = normal;
-		switch (power->GetType())
-		{
-		case PowerUpType::Confusion:
-			state = confusedState;
-			break;
-		case PowerUpType::Grapple:
-			state = grapplestate;
-			break;
-		case PowerUpType::Bonus:
-			
-			break;
-		case PowerUpType::Freeze:
-			state = frozenState;
-			break;
-		default:
-
-		}
-		currentState->Exit();
-		currentState = state;
-		currentState->Enter();
+		std::cout << "PowerUp";
+	}
+	if (otherObject == enemy)
+	{
+		std::cout << "Enemy";
+		score = 0;
+		this->transform.SetPosition(spawn);
 	}
 }
 

@@ -6,19 +6,37 @@
 namespace NCL {
 	namespace CSC8503 {
 
+		class Enemy;
+
 		class Player : public GameObject {
 		public:
-			Player(GameWorld* world);
+			Player(GameWorld* world, int& score);
 			~Player();
+
+			void SetEnemy(Enemy* enemy)
+			{
+				this->enemy = enemy;
+			}
+
+			void SetSpawn(Vector3 spawn)
+			{
+				this->spawn = spawn;
+			}
+
+			void ApplyEffect(PowerUpType type);
 
 			virtual void Update(float dt);
 
 			virtual void OnCollisionBegin(GameObject* otherObject) override;
 
+
+
 			virtual std::string OnDebug() override;
 		protected:
-
-			GameWorld* world;
+			Vector3 spawn;
+			Enemy* enemy;
+			int& score;
+			GameWorld* world;//needed world for grapple but no time :'(
 
 			class MovementState;
 

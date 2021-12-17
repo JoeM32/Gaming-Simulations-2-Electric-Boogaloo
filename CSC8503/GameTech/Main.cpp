@@ -342,7 +342,7 @@ int main() {
 
 	//TestPathfinding();
 
-	//TestBehaviourTree();
+	TestBehaviourTree();
 
 	GameManager* g = new GameManager();
 	//g->loadGameA();

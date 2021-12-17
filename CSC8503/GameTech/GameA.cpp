@@ -8,7 +8,11 @@
 #include "../CSC8503Common/RotationConstraint.h"
 #include "../CSC8503Common/PositionAxisConstraint.h"
 #include "../CSC8503Common/RotationAxisConstraint.h"
-#include "../CSC8503Common/PowerUp.h"
+#include "../CSC8503Common/VelocityAxisConstraint.h"
+#include "../CSC8503Common/PlayerBall.h"
+#include "../CSC8503Common/PointToken.h"
+#include "../CSC8503Common/Ice.h"
+#include "../CSC8503Common/Bouncer.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -23,7 +27,9 @@ GameA::GameA(GameWorld* gameworld, GameTechRenderer* renderer, PhysicsSystem* ph
 	inSelectionMode = false;
 
 	timer = 0;
-	itemsLeft = 3;
+	score = 0;
+
+	spawn = Vector3(0, 0, 0);
 
 	//Debug::SetRenderer(renderer);
 	InitialiseAssets();
@@ -60,14 +66,7 @@ void GameA::InitialiseAssets() {
 	InitWorld();
 }
 
-void NCL::CSC8503::GameA::BonusAccquired()
-{
-	itemsLeft -= 1;
-	if (itemsLeft == 0)
-	{
-		EndGame();
-	}
-}
+
 
 GameA::~GameA() {
 	delete cubeMesh;
@@ -86,7 +85,7 @@ GameA::~GameA() {
 void GameA::UpdateGame(float dt) {
 
 
-	if (!endGame)
+	if (score < 3)
 	{
 		world->GetMainCamera()->UpdateCamera(dt);
 		timer += dt;
@@ -115,7 +114,8 @@ void GameA::UpdateGame(float dt) {
 	
 	physics->Update(dt);
 
-	renderer->DrawString(debugText, Vector2(5, 80));
+	renderer->DrawString(debugText, Vector2(2, 70),Vector4(1,0.2,0.2,1),10.0f);
+	renderer->DrawString(clickText, Vector2(2, 90));
 
 	/*if (lockedObject != nullptr) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
@@ -149,7 +149,7 @@ void GameA::UpdateGame(float dt) {
 }
 
 void GameA::UpdateKeys() {
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
+	/*if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
 		InitWorld(); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
 		lockedObject = nullptr;
@@ -186,7 +186,13 @@ void GameA::UpdateKeys() {
 	}
 	else {
 		DebugObjectMovement();
+	}*/
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::R)) {
+		player->GetTransform().SetPosition(spawn);
+		timer += 5;
 	}
+
+
 }
 
 void GameA::LockedObjectMovement() {
@@ -230,10 +236,7 @@ void GameA::LockedObjectMovement() {
 	}
 }
 
-void NCL::CSC8503::GameA::EndGame()
-{
-	endGame = true;
-}
+
 
 void GameA::DebugObjectMovement() {
 	//If we've selected an object, we can manipulate it with some key presses
@@ -296,6 +299,10 @@ void GameA::InitWorld() {
 	//InitDefaultFloor();
 	//InitOne
 	CreateMap();
+	AddPlayerToWorld(spawn);
+	AddPointToWorld(Vector3(30,2,30));
+	AddPointToWorld(Vector3(-30, 2, -30));
+	AddPointToWorld(Vector3(30, 2, -30));
 	//BridgeConstraintTest();
 
 	//testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
@@ -317,15 +324,18 @@ void NCL::CSC8503::GameA::InitOne()
 void NCL::CSC8503::GameA::CreateMap()
 {
 	GameObject* obj;
-	AddCubeToWorld(Vector3(0, 0, 100), Vector3(100, 20, 5),0);
-	AddCubeToWorld(Vector3(0, 0, -100), Vector3(100, 20, 5), 0);
-	AddCubeToWorld(Vector3(100, 0, 0), Vector3(5, 20, 100), 0);
-	AddCubeToWorld(Vector3(-100, 0, 0), Vector3(5, 20, 100), 0);
-	AddCubeToWorld(Vector3(0, -5, -25), Vector3(100, 2, 25), 0);
-	AddCubeToWorld(Vector3(0, -5, -75), Vector3(100, 2, 25), 0);
-	AddCubeToWorld(Vector3(0, -5, 25), Vector3(100, 2, 25), 0);
-	AddCubeToWorld(Vector3(0, -5, 75), Vector3(100, 2, 25), 0);
-	obj = AddSphereToWorld(Vector3(0, -5, 100), 30, 0);
+	AddCubeToWorld(Vector3(0, 0, 100), Vector3(100, 20, 5),0, true);
+	AddCubeToWorld(Vector3(0, 0, -100), Vector3(100, 20, 5), 0, true);
+	AddCubeToWorld(Vector3(100, 0, 0), Vector3(5, 20, 100), 0, true);
+	AddCubeToWorld(Vector3(-100, 0, 0), Vector3(5, 20, 100), 0, true);
+	obj = AddIceToWorld(Vector3(0, -5, -25), Vector3(100, 2, 25), 0);
+	obj->GetRenderObject()->SetColour(Vector4(0.3, 0.3, 1, 1));
+	AddCubeToWorld(Vector3(0, -5, -75), Vector3(100, 2, 25), 0, true);
+	AddCubeToWorld(Vector3(0, -5, 25), Vector3(100, 2, 25), 0, true);
+	obj = AddIceToWorld(Vector3(0, -5, 75), Vector3(100, 2, 25), 0);
+	obj->GetRenderObject()->SetColour(Vector4(0.3, 0.3, 1, 1));
+
+	/*obj = AddSphereToWorld(Vector3(0, -5, 100), 30, 0);
 	obj->GetPhysicsObject()->SetElasticity(1.0f);
 	obj->GetRenderObject()->SetColour(Vector4(0.5, 0.3, 0.2, 1));
 	obj = AddSphereToWorld(Vector3(0, -5, -100), 30, 0);
@@ -336,7 +346,28 @@ void NCL::CSC8503::GameA::CreateMap()
 	obj->GetRenderObject()->SetColour(Vector4(0.5, 0.3, 0.2, 1));
 	obj = AddSphereToWorld(Vector3(-100, -5, 0), 30, 0);
 	obj->GetPhysicsObject()->SetElasticity(1.0f);
+	obj->GetRenderObject()->SetColour(Vector4(0.5, 0.3, 0.2, 1));*/
+
+	obj = AddBouncerToWorld(Vector3(0, -5, 100), Vector3(0, 0, -1), 30);
+	obj->GetPhysicsObject()->SetElasticity(1.0f);
 	obj->GetRenderObject()->SetColour(Vector4(0.5, 0.3, 0.2, 1));
+	obj = AddBouncerToWorld(Vector3(0, -5, -100), Vector3(0, 0, 1), 30);
+	obj->GetPhysicsObject()->SetElasticity(1.0f);
+	obj->GetRenderObject()->SetColour(Vector4(0.5, 0.3, 0.2, 1));
+	obj = AddBouncerToWorld(Vector3(100, -5, 0), Vector3(-1, 0, 0), 30);
+	obj->GetPhysicsObject()->SetElasticity(1.0f);
+	obj->GetRenderObject()->SetColour(Vector4(0.5, 0.3, 0.2, 1));
+	obj = AddBouncerToWorld(Vector3(-100, -5, 0), Vector3(1, 0, 0), 30);
+	obj->GetPhysicsObject()->SetElasticity(1.0f);
+	obj->GetRenderObject()->SetColour(Vector4(0.5, 0.3, 0.2, 1));
+
+	obj = AddCubeToWorld(Vector3(0, 10, 20), Vector3(14, 5, 1), 10);
+	PositionAxisConstraint* constraint = new PositionAxisConstraint(obj, Vector3(1, 1, 0));
+	world->AddConstraint(constraint);
+
+	obj = AddCubeToWorld(Vector3(-30, 10, 40), Vector3(1, 5, 14), 10);
+	constraint = new PositionAxisConstraint(obj, Vector3(0, 1, 1));
+	world->AddConstraint(constraint);
 	//AddCubeToWorld(Vector3(0, -5, 0), Vector3(100, 2, 100), 0);
 
 	//AddCubeToWorld(Vector3(0, 0, 0), Vector3(5, 20, 100), 0);
@@ -422,7 +453,7 @@ rigid body representation. This and the cube function will let you build a lot o
 physics worlds. You'll probably need another function for the creation of OBB cubes too.
 
 */
-GameObject* GameA::AddSphereToWorld(const Vector3& position, float radius, float inverseMass) {
+GameObject* GameA::AddSphereToWorld(const Vector3& position, float radius, float inverseMass, bool clipping) {
 	GameObject* sphere = new GameObject("Sphere");
 
 	Vector3 sphereSize = Vector3(radius, radius, radius);
@@ -433,6 +464,7 @@ GameObject* GameA::AddSphereToWorld(const Vector3& position, float radius, float
 		.SetPosition(position);
 
 	SphereVolume* volume = new SphereVolume(sphere->GetTransform());
+	volume->SetClipping(clipping);
 	sphere->SetBoundingVolume((CollisionVolume*)volume);
 
 	sphere->SetRenderObject(new RenderObject(&sphere->GetTransform(), sphereMesh, basicTex, basicShader));
@@ -471,7 +503,7 @@ GameObject* GameA::AddCapsuleToWorld(const Vector3& position, float halfHeight, 
 
 }
 
-GameObject* GameA::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass) {
+GameObject* GameA::AddCubeToWorld(const Vector3& position, Vector3 dimensions, float inverseMass, bool clipping) {
 	GameObject* cube = new GameObject();
 
 
@@ -481,6 +513,7 @@ GameObject* GameA::AddCubeToWorld(const Vector3& position, Vector3 dimensions, f
 		.SetScale(dimensions * 2);
 
 	AABBVolume* volume = new AABBVolume(cube->GetTransform());
+	volume->SetClipping(clipping);
 	cube->SetBoundingVolume((CollisionVolume*)volume);
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
@@ -492,6 +525,59 @@ GameObject* GameA::AddCubeToWorld(const Vector3& position, Vector3 dimensions, f
 	world->AddGameObject(cube);
 
 	return cube;
+}
+
+GameObject* NCL::CSC8503::GameA::AddIceToWorld(const Vector3& position, Vector3 dimensions, float inverseMass)
+{
+	GameObject* stuff = new Ice();
+
+	stuff->GetTransform()
+		.SetPosition(position)
+		.SetScale(dimensions * 2);
+
+	AABBVolume* volume = new AABBVolume(stuff->GetTransform());
+
+	stuff->SetBoundingVolume((CollisionVolume*)volume);
+	volume->SetClipping(true);
+	stuff->SetRenderObject(new RenderObject(&stuff->GetTransform(), cubeMesh, basicTex, basicShader));
+	stuff->SetPhysicsObject(new PhysicsObject(&stuff->GetTransform(), stuff->GetBoundingVolume()));
+
+	stuff->GetPhysicsObject()->SetInverseMass(inverseMass);
+	stuff->GetPhysicsObject()->InitCubeInertia();
+
+	world->AddGameObject(stuff);
+
+	return stuff;
+}
+
+GameObject* NCL::CSC8503::GameA::AddBouncerToWorld(const Vector3& position, Vector3 axis, float size)
+{
+	GameObject* bouncer = new Bouncer(axis,  position, 3, 2000);
+
+	Vector3 sphereSize = Vector3(size, size, size);
+
+
+	bouncer->GetTransform()
+		.SetScale(sphereSize)
+		.SetPosition(position);
+
+	SphereVolume* volume = new SphereVolume(bouncer->GetTransform());
+	volume->SetClipping(true);
+	bouncer->SetBoundingVolume((CollisionVolume*)volume);
+
+	bouncer->SetRenderObject(new RenderObject(&bouncer->GetTransform(), sphereMesh, basicTex, basicShader));
+	bouncer->SetPhysicsObject(new PhysicsObject(&bouncer->GetTransform(), bouncer->GetBoundingVolume()));
+
+	bouncer->GetPhysicsObject()->SetInverseMass(1);
+	bouncer->GetPhysicsObject()->InitSphereInertia();
+	bouncer->GetPhysicsObject()->SetDamping(10);
+	world->AddGameObject(bouncer);
+
+	VelocityAxisConstraint* constraint = new VelocityAxisConstraint(bouncer,
+		axis);
+	world->AddConstraint(constraint);
+	
+	return bouncer;
 }
 
 GameObject* GameA::AddOBBToWorld(const Vector3& position, Vector3 rotation, Vector3 dimensions, float inverseMass) {
@@ -566,7 +652,7 @@ void GameA::InitDefaultFloor() {
 void GameA::InitGameExamples() {
 	AddPlayerToWorld(Vector3(0, 5, 0));
 	AddEnemyToWorld(Vector3(5, 5, 0));
-	AddBonusToWorld(Vector3(10, 5, 0));
+	//AddBonusToWorld(Vector3(10, 5, 0));
 }
 
 /*GameObject* GameA::AddPlayerToWorld(const Vector3& position) {
@@ -628,7 +714,31 @@ GameObject* GameA::AddEnemyToWorld(const Vector3& position) {
 	return character;
 }
 
-GameObject* GameA::AddBonusToWorld(const Vector3& position) {
+GameObject* NCL::CSC8503::GameA::AddPointToWorld(const Vector3& position)
+{
+	GameObject* bonus = new PointToken(world, score);
+
+
+	bonus->GetTransform()
+		.SetScale(Vector3(3, 3, 3))
+		.SetPosition(position);
+
+	SphereVolume* volume = new SphereVolume(bonus->GetTransform());
+	volume->SetClipping(true);
+	bonus->SetBoundingVolume((CollisionVolume*)volume);
+
+	bonus->SetRenderObject(new RenderObject(&bonus->GetTransform(), sphereMesh, nullptr, basicShader));
+	bonus->SetPhysicsObject(new PhysicsObject(&bonus->GetTransform(), bonus->GetBoundingVolume()));
+	bonus->GetRenderObject()->SetColour(Vector4(1, 1, 0, 0.6));
+	bonus->GetPhysicsObject()->SetInverseMass(0.0f);
+	bonus->GetPhysicsObject()->InitSphereInertia();
+
+	world->AddGameObject(bonus);
+
+	return bonus;
+}
+
+/*GameObject* GameA::AddBonusToWorld(const Vector3& position) {
 	GameObject* bonus = new PowerUp(PowerUpType::Bonus, this);
 
 
@@ -648,7 +758,7 @@ GameObject* GameA::AddBonusToWorld(const Vector3& position) {
 	world->AddGameObject(bonus);
 
 	return bonus;
-}
+}*/
 
 StateGameObject* NCL::CSC8503::GameA::AddStateObjectToWorld(const Vector3& position)
 {
@@ -675,7 +785,7 @@ StateGameObject* NCL::CSC8503::GameA::AddStateObjectToWorld(const Vector3& posit
 
 GameObject* NCL::CSC8503::GameA::AddPlayerToWorld(const Vector3& position)
 {
-	GameObject* player = new StateGameObject();
+	player = new PlayerBall();
 
 
 	player->GetTransform()
@@ -688,7 +798,7 @@ GameObject* NCL::CSC8503::GameA::AddPlayerToWorld(const Vector3& position)
 	player->SetRenderObject(new RenderObject(&player->GetTransform(), sphereMesh, nullptr, basicShader));
 	player->SetPhysicsObject(new PhysicsObject(&player->GetTransform(), player->GetBoundingVolume()));
 
-	player->GetPhysicsObject()->SetInverseMass(1.0f);
+	player->GetPhysicsObject()->SetInverseMass(10.0f);
 	player->GetPhysicsObject()->InitSphereInertia();
 
 	world->AddGameObject(player);
@@ -783,7 +893,7 @@ bool GameA::SelectObject() {
 
 bool NCL::CSC8503::GameA::DebugObjects()
 {
-	if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::RIGHT)) {
+	if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::RIGHT)) {
 
 		Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
 
@@ -803,7 +913,7 @@ bool NCL::CSC8503::GameA::DebugObjects()
 
 bool NCL::CSC8503::GameA::ClickObjects()
 {
-	if (Window::GetMouse()->ButtonDown(NCL::MouseButtons::LEFT)) {
+	if (Window::GetMouse()->ButtonPressed(NCL::MouseButtons::LEFT)) {
 
 		Ray ray = CollisionDetection::BuildRayFromMouse(*world->GetMainCamera());
 
@@ -811,7 +921,13 @@ bool NCL::CSC8503::GameA::ClickObjects()
 		if (world->Raycast(ray, closestCollision, true)) {
 
 			GameObject* clicked = (GameObject*)closestCollision.node;
+			clicked->OnClick(clickText);
 		}
+		else
+		{
+			clickText = "";
+		}
+
 
 	}
 	return false;

@@ -25,6 +25,16 @@ namespace NCL {
 
 		VolumeType type;
 
+		virtual void SetClipping(bool clipping)
+		{
+			this->clipping = clipping;
+		}
+
+		virtual bool GetClipping() const
+		{
+			return clipping;
+		}
+
 		virtual void GetCollisionAxes(const CollisionVolume& other, std::vector <Vector3 >& axes) const;
 
 		virtual Vector3  GetClosestPoint(Vector3 point) const;//gets closest vertex to a point
@@ -66,5 +76,6 @@ namespace NCL {
 
 	protected:
 		const NCL::CSC8503::Transform& transform;
+		bool clipping = false;
 	};
 }

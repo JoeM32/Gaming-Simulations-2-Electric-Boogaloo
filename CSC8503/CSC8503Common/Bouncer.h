@@ -12,8 +12,7 @@ namespace NCL {
 				timer = -1;
 				this->origin = origin;
 			}
-			~Bouncer();
-
+			std::string OnDebug() override;
 			virtual void Update(float dt) override;
 			virtual bool OnClick(std::string& information);
 
@@ -23,7 +22,6 @@ namespace NCL {
 			Vector3 origin;
 			Vector3 axis;
 			float force;
-			bool returning;
 
 		};
 	}

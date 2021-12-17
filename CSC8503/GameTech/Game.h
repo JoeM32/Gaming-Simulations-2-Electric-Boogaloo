@@ -1,7 +1,6 @@
 #pragma once
 #include "GameTechRenderer.h"
 #include "../CSC8503Common/PhysicsSystem.h"
-#include "StateGameObject.h"
 #include "Game.h"
 
 namespace NCL {
@@ -45,8 +44,7 @@ namespace NCL {
 				renderer->Render();
 			};
 
-			virtual void BonusAccquired() {}
-			{}
+			virtual void BonusAccquired() {};
 
 		private://yes this is double references. This class was not built to work like this, but the menu has forced my hand at the eleventh hour.
 			GameWorld* gameworld;
