@@ -2,6 +2,11 @@
 #include "..\CSC8503Common\GameObject.h"
 #include "GameWorld.h"
 #include "PowerUp.h"
+#include "BehaviourSequence.h"
+#include "BehaviourAction.h"
+#include "BehaviourSelector.h"
+#include "NavigationGrid.h"
+#include "NavigationPath.h"
 
 namespace NCL {
 	namespace CSC8503 {
@@ -30,68 +35,93 @@ namespace NCL {
 			virtual void OnCollisionBegin(GameObject* otherObject) override;
 
 			virtual std::string OnDebug() override;
+
+			void MoveEnemy(Vector3 direction, float dt);
+
+			NavigationGrid* getGrid()
+			{
+				return grid;
+			}
+
 		protected:
+
+			vector <Vector3 > testNodes;
+
+			NavigationGrid* grid;
+			NavigationPath outPath;
+			Vector3 currentWaypoint;
+
+			float speed = 75;
+
 			Vector3 spawn;
 			Player* player;
 			std::vector<PowerUp*>& powerUps;
-			class MovementState;
 
-			MovementState* currentState;
-			MovementState* normal;
-			MovementState* frozenState;
-			MovementState* confusedState;
+			GameObject* target;
+			float time;
 
-			class MovementState
+			BehaviourAction* findTarget;
+			BehaviourAction* moveToTarget;
+			BehaviourSequence* sequence;
+			BehaviourState state;
+
+			class MovementStateAI;
+
+			MovementStateAI* currentState;
+			MovementStateAI* normal;
+			MovementStateAI* frozenState;
+			MovementStateAI* confusedState;
+
+			class MovementStateAI
 			{
 			public:
 				friend class Enemy;
-				MovementState(Enemy* player)
+				MovementStateAI(Enemy* self)
 				{
-					this->player = player;
+					this->self = self;
 				}
 				virtual void Update(float dt)
 				{
 					time -= dt;
-					UpdateEffect(dt);
 					if (time < 0)
 					{
 						Exit();
-						player->currentState = player->normal;
+						self->currentState = self->normal;
 					}
 
 				};
-				virtual void UpdateEffect(float dt) = 0;
+				virtual void Move(Vector3 direction, float dt) = 0;
 				virtual void Enter() = 0;
 				virtual void Exit() = 0;
 
 			protected:
 				float time = 5;
-				Enemy* player;
+				Enemy* self;
 			};
 
-			class Frozen : public MovementState
+			class FrozenAI : public MovementStateAI
 			{
 			public:
-				Frozen(Enemy* player) : MovementState(player) {};
-				void UpdateEffect(float dt)override;
+				FrozenAI(Enemy* self) : MovementStateAI(self) {};
+				void Move(Vector3 direction, float dt)override;
 				void Enter()override;
 				void Exit()override;
 			};
 
-			class Normal : public MovementState
+			class NormalAI : public MovementStateAI
 			{
 			public:
-				Normal(Enemy* player) : MovementState(player) {};
-				void UpdateEffect(float dt)override;
+				NormalAI(Enemy* self) : MovementStateAI(self) {};
+				void Move(Vector3 direction, float dt)override;
 				void Enter()override;
 				void Exit()override;
 			};
 
-			class Confused : public MovementState
+			class ConfusedAI : public MovementStateAI
 			{
 			public:
-				Confused(Enemy* player) : MovementState(player) {};
-				void UpdateEffect(float dt)override;
+				ConfusedAI(Enemy* self) : MovementStateAI(self) {};
+				void Move(Vector3 direction, float dt)override;
 				void Enter()override;
 				void Exit()override;
 			};

@@ -2,30 +2,28 @@
 #include "PowerUp.h"
 #include "Enemy.h"
 
-NCL::CSC8503::Player::Player(GameWorld* world, int& score) : score(score)
+NCL::CSC8503::Player::Player(GameWorld* world, int& score) : score(score), GameObject("player")
 {
 	this->world = world;
 	frozenState = new Frozen(this);
 	normal = new Normal(this);
 	confusedState = new Confused(this);
-	grapplestate = new Grapple(this);
 	currentState = normal;
 }
 
 NCL::CSC8503::Player::~Player()
 {
+
 }
 
 void NCL::CSC8503::Player::ApplyEffect(PowerUpType type)
 {
+	std::cout << "Player Affected";
 	auto state = normal;
 	switch (type)
 	{
 	case PowerUpType::Confusion:
 		state = confusedState;
-		break;
-	case PowerUpType::Grapple:
-		state = grapplestate;
 		break;
 	case PowerUpType::Freeze:
 		state = frozenState;
@@ -50,12 +48,14 @@ void NCL::CSC8503::Player::OnCollisionBegin(GameObject* otherObject)
 	if (power)
 	{
 		std::cout << "PowerUp";
+		enemy->ApplyEffect(power->GetType());
 	}
 	if (otherObject == enemy)
 	{
-		std::cout << "Enemy";
+		std::cout << "Enemy hit returning to " << spawn << "\n";
 		score = 0;
 		this->transform.SetPosition(spawn);
+
 	}
 }
 

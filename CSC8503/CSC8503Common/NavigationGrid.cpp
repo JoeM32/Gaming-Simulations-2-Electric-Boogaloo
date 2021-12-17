@@ -24,6 +24,8 @@ NavigationGrid::NavigationGrid()	{
 NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
 	std::ifstream infile(Assets::DATADIR + filename);
 
+	offset = Vector3(0, 0, 0);
+
 	infile >> nodeSize;
 	infile >> gridWidth;
 	infile >> gridHeight;
@@ -71,30 +73,63 @@ NavigationGrid::NavigationGrid(const std::string&filename) : NavigationGrid() {
 	}
 }
 
+std::vector<Vector3> NavigationGrid::getWallNodes()
+{
+	std::vector<Vector3> nodes;
+	for (int y = 0; y < gridHeight; ++y) {
+		for (int x = 0; x < gridWidth; ++x) {
+			if ((allNodes[(gridWidth * y) + x].type == 'x'))
+			{
+				nodes.emplace_back(allNodes[(gridWidth * y) + x].position);
+			}
+		}
+	}
+	return nodes;
+}
+
+std::vector<Vector3> NavigationGrid::getEmptyNodes()
+{
+	std::vector<Vector3> nodes;
+	for (int y = 0; y < gridHeight; ++y) {
+		for (int x = 0; x < gridWidth; ++x) {
+			if ((allNodes[(gridWidth * y) + x].type == '.'))
+			{
+				nodes.emplace_back(allNodes[(gridWidth * y) + x].position);
+			}
+		}
+	}
+	return nodes;
+}
+
 NavigationGrid::~NavigationGrid()	{
 	delete[] allNodes;
 }
 
 bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) {
 	//need to work out which node 'from' sits in, and 'to' sits in
-	int fromX = ((int)from.x / nodeSize);
-	int fromZ = ((int)from.z / nodeSize);
+	Vector3  fromOffset = from - offset;
+	Vector3  toOffset = to - offset;
+	int fromX = (((int)fromOffset.x + nodeSize/2)/ nodeSize);
+	int fromZ = (((int)fromOffset.z + nodeSize / 2) / nodeSize);
 
-	int toX = ((int)to.x / nodeSize);
-	int toZ = ((int)to.z / nodeSize);
+	int toX = (((int)toOffset.x + nodeSize / 2) / nodeSize);
+	int toZ = (((int)toOffset.z + nodeSize / 2) / nodeSize);
 
 	if (fromX < 0 || fromX > gridWidth - 1 ||
 		fromZ < 0 || fromZ > gridHeight - 1) {
+		std::cout << "outside of map";
 		return false; //outside of map region!
 	}
 
 	if (toX < 0 || toX > gridWidth - 1 ||
 		toZ < 0 || toZ > gridHeight - 1) {
+		std::cout << "outside of map";
 		return false; //outside of map region!
 	}
 
 	GridNode* startNode = &allNodes[(fromZ * gridWidth) + fromX];
 	GridNode* endNode	= &allNodes[(toZ * gridWidth) + toX];
+
 
 	std::vector<GridNode*>  openList;
 	std::vector<GridNode*>  closedList;
@@ -113,7 +148,7 @@ bool NavigationGrid::FindPath(const Vector3& from, const Vector3& to, Navigation
 		if (currentBestNode == endNode) {			//we've found the path!
 			GridNode* node = endNode;
 			while (node != nullptr) {
-				outPath.PushWaypoint(node->position);
+				outPath.PushWaypoint(node->position + offset);
 				node = node->parent;
 			}
 			return true;
@@ -172,5 +207,6 @@ GridNode*  NavigationGrid::RemoveBestNode(std::vector<GridNode*>& list) const {
 }
 
 float NavigationGrid::Heuristic(GridNode* hNode, GridNode* endNode) const {
+
 	return (hNode->position - endNode->position).Length();
 }

@@ -11,7 +11,7 @@ namespace NCL {
 
 		class PowerUp : public GameObject {
 		public:
-			PowerUp(PowerUpType type, GameWorld* game, std::vector<PowerUp*>& powerUps) : powerUps(powerUps)
+			PowerUp(PowerUpType type, GameWorld* game, std::vector<PowerUp*>& powerUps) : powerUps(powerUps), GameObject("pwowerup")
 			{
 				this->type = type;
 				this->world = game;//this is now hilariously bad, making the game depend on powerups lmao. needs must when the devil drives - i.e. doing 20 credit module 100% coursework in a week and a half. This will never, ever, ever go on my portfolio thank god

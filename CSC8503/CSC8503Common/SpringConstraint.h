@@ -10,7 +10,7 @@ namespace NCL {
 
 		class SpringConstraint : public Constraint {
 		public:
-			SpringConstraint(GameObject* object1, GameObject* object2, float length = 0.0f, float snappiness = 0.5f, float damping = 0.5f) {
+			SpringConstraint(GameObject* object1, GameObject* object2, float length = 0.0f, float snappiness = 0.8f, float damping = 0.1f) {
 				this->object1 = object1;
 				this->object2 = object2;
 				restingLength = length;

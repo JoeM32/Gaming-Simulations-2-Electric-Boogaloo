@@ -1,4 +1,20 @@
 ﻿  Enemy.cpp
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\Enemy.cpp(18,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\CSC8503Common\Enemy.cpp(125,29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Player.cpp
+  PowerUp.cpp
+  Generating Code...
+Debug.obj : warning LNK4006: "protected: static class NCL::Rendering::OGLRenderer * NCL::Debug::renderer" (?renderer@Debug@NCL@@1PEAVOGLRenderer@Rendering@2@EA) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static void __cdecl NCL::Debug::Print(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class NCL::Maths::Vector2 const &,class NCL::Maths::Vector4 const &)" (?Print@Debug@NCL@@SAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVVector2@Maths@2@AEBVVector4@62@@Z) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static void __cdecl NCL::Debug::DrawLine(class NCL::Maths::Vector3 const &,class NCL::Maths::Vector3 const &,class NCL::Maths::Vector4 const &,float)" (?DrawLine@Debug@NCL@@SAXAEBVVector3@Maths@2@0AEBVVector4@42@M@Z) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static void __cdecl NCL::Debug::DrawAxisLines(class NCL::Maths::Matrix4 const &,float,float)" (?DrawAxisLines@Debug@NCL@@SAXAEBVMatrix4@Maths@2@MM@Z) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static void __cdecl NCL::Debug::FlushRenderables(float)" (?FlushRenderables@Debug@NCL@@SAXM@Z) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static class NCL::Maths::Vector4 const NCL::Debug::RED" (?RED@Debug@NCL@@2VVector4@Maths@2@B) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static class NCL::Maths::Vector4 const NCL::Debug::GREEN" (?GREEN@Debug@NCL@@2VVector4@Maths@2@B) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static class NCL::Maths::Vector4 const NCL::Debug::BLUE" (?BLUE@Debug@NCL@@2VVector4@Maths@2@B) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static class NCL::Maths::Vector4 const NCL::Debug::BLACK" (?BLACK@Debug@NCL@@2VVector4@Maths@2@B) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static class NCL::Maths::Vector4 const NCL::Debug::WHITE" (?WHITE@Debug@NCL@@2VVector4@Maths@2@B) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static class NCL::Maths::Vector4 const NCL::Debug::YELLOW" (?YELLOW@Debug@NCL@@2VVector4@Maths@2@B) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static class NCL::Maths::Vector4 const NCL::Debug::MAGENTA" (?MAGENTA@Debug@NCL@@2VVector4@Maths@2@B) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "public: static class NCL::Maths::Vector4 const NCL::Debug::CYAN" (?CYAN@Debug@NCL@@2VVector4@Maths@2@B) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "protected: static class std::vector<struct NCL::Debug::DebugStringEntry,class std::allocator<struct NCL::Debug::DebugStringEntry> > NCL::Debug::stringEntries" (?stringEntries@Debug@NCL@@1V?$vector@UDebugStringEntry@Debug@NCL@@V?$allocator@UDebugStringEntry@Debug@NCL@@@std@@@std@@A) already defined in Enemy.obj; second definition ignored
+Debug.obj : warning LNK4006: "protected: static class std::vector<struct NCL::Debug::DebugLineEntry,class std::allocator<struct NCL::Debug::DebugLineEntry> > NCL::Debug::lineEntries" (?lineEntries@Debug@NCL@@1V?$vector@UDebugLineEntry@Debug@NCL@@V?$allocator@UDebugLineEntry@Debug@NCL@@@std@@@std@@A) already defined in Enemy.obj; second definition ignored
   CSC8503Common.vcxproj -> C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\CSC8503Common.lib

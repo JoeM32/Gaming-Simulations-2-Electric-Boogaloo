@@ -18,7 +18,7 @@ namespace NCL {
 
 		protected:
 			int score;
-
+			float timer = 0;
 			void CameraLook();
 			void InitialiseAssets();
 
@@ -27,7 +27,7 @@ namespace NCL {
 
 			void InitWorld();
 
-			void InitOne();
+			void InitExamples();
 
 			void CreateMap();
 
@@ -44,6 +44,9 @@ namespace NCL {
 			void MoveSelectedObject();
 			void DebugObjectMovement();
 			void LockedObjectMovement();
+
+			void DisplayGrid();
+			void BuildWalls();
 
 			GameObject* AddFloorToWorld(const Vector3& position);
 			GameObject* AddSphereToWorld(const Vector3& position, float radius, float inverseMass = 10.0f);

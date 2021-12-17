@@ -24,6 +24,13 @@ namespace NCL {
 				waypoints.pop_back();
 				return true;
 			}
+			bool	PeekWaypoint(Vector3& waypoint) {
+				if (waypoints.empty()) {
+					return false;
+				}
+				waypoint = waypoints.back();
+				return true;
+			}
 
 		protected:
 

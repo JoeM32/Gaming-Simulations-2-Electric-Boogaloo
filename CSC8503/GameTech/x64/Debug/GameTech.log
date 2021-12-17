@@ -1,1 +1,12 @@
-﻿  GameTech.vcxproj -> C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\GameTech.exe
+﻿  GameB.cpp
+C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\GameB.cpp(384,60): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\GameB.cpp(387,60): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\GameB.cpp(390,60): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\GameB.cpp(393,60): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\GameB.cpp(754,73): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\GameB.cpp(754,94): warning C4305: 'argument': truncation from 'double' to 'float'
+  GameManager.cpp
+  Main.cpp
+C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\CSC8503\GameTech\Main.cpp(80,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Generating Code...
+  GameTech.vcxproj -> C:\Users\joemi\Documents\GitHub\Gaming-Simulations-2-Electric-Boogaloo\x64\Debug\GameTech.exe

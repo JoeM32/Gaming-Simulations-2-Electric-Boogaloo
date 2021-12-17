@@ -9,6 +9,13 @@ void NCL::CSC8503::PointToken::OnCollisionBegin(GameObject* otherObject)
 	if (player)
 	{
 		counter += 1;
-		world->RemoveGameObject(this, false);
+
 	}
+	Player* player1 = dynamic_cast <Player*> (otherObject);//jsut the worst programming ever :/
+	if (player1)
+	{
+		counter += 1;
+		
+	}
+	world->RemoveGameObject(this, false);
 }

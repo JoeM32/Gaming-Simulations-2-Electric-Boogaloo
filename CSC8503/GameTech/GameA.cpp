@@ -13,6 +13,7 @@
 #include "../CSC8503Common/PointToken.h"
 #include "../CSC8503Common/Ice.h"
 #include "../CSC8503Common/Bouncer.h"
+#include "../CSC8503Common/SpinConstraint.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -25,11 +26,11 @@ GameA::GameA(GameWorld* gameworld, GameTechRenderer* renderer, PhysicsSystem* ph
 	forceMagnitude = 10.0f;
 	useGravity = true;
 	inSelectionMode = false;
-
+	
 	timer = 0;
 	score = 0;
 
-	spawn = Vector3(0, 0, 0);
+	spawn = Vector3(-60, 0, 1);
 
 	//Debug::SetRenderer(renderer);
 	InitialiseAssets();
@@ -368,6 +369,7 @@ void NCL::CSC8503::GameA::CreateMap()
 	obj = AddCubeToWorld(Vector3(-30, 10, 40), Vector3(1, 5, 14), 10);
 	constraint = new PositionAxisConstraint(obj, Vector3(0, 1, 1));
 	world->AddConstraint(constraint);
+
 	//AddCubeToWorld(Vector3(0, -5, 0), Vector3(100, 2, 100), 0);
 
 	//AddCubeToWorld(Vector3(0, 0, 0), Vector3(5, 20, 100), 0);
@@ -650,7 +652,7 @@ void GameA::InitDefaultFloor() {
 }
 
 void GameA::InitGameExamples() {
-	AddPlayerToWorld(Vector3(0, 5, 0));
+	AddPlayerToWorld(Vector3(0, 5, -50));
 	AddEnemyToWorld(Vector3(5, 5, 0));
 	//AddBonusToWorld(Vector3(10, 5, 0));
 }
@@ -794,7 +796,7 @@ GameObject* NCL::CSC8503::GameA::AddPlayerToWorld(const Vector3& position)
 
 	SphereVolume* volume = new SphereVolume(player->GetTransform());
 	player->SetBoundingVolume((CollisionVolume*)volume);
-
+	player->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
 	player->SetRenderObject(new RenderObject(&player->GetTransform(), sphereMesh, nullptr, basicShader));
 	player->SetPhysicsObject(new PhysicsObject(&player->GetTransform(), player->GetBoundingVolume()));
 

@@ -36,6 +36,19 @@ namespace NCL {
 			~NavigationGrid();
 
 			bool FindPath(const Vector3& from, const Vector3& to, NavigationPath& outPath) override;
+
+			std::vector<Vector3> getWallNodes();
+			std::vector<Vector3> getEmptyNodes();
+
+			void SetOffset(Vector3 offset)
+			{
+				this->offset = offset;
+			}
+
+			Vector3 GetOffset()
+			{
+				return offset;
+			}
 				
 		protected:
 			bool		NodeInList(GridNode* n, std::vector<GridNode*>& list) const;
@@ -44,6 +57,7 @@ namespace NCL {
 			int nodeSize;
 			int gridWidth;
 			int gridHeight;
+			Vector3 offset;
 
 			GridNode* allNodes;
 		};

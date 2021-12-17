@@ -12,6 +12,9 @@
 #include "../CSC8503Common/PowerUp.h"
 #include "../CSC8503Common/Enemy.h"
 #include "../CSC8503Common/PointToken.h"
+#include "../CSC8503Common/SpringConstraint.h"
+#include "../CSC8503Common/NavigationGrid.h"
+#include "../CSC8503Common/NavigationPath.h"
 
 using namespace NCL;
 using namespace CSC8503;
@@ -25,8 +28,8 @@ GameB::GameB(GameWorld* gameworld, GameTechRenderer* renderer, PhysicsSystem* ph
 	useGravity = true;
 	inSelectionMode = false;
 
-	enemySpawn = Vector3(50, 2, 50);
-	playerSpawn = Vector3(-50, 2, -50);
+	enemySpawn = Vector3(90, 2, 90);
+	playerSpawn = Vector3(10, 2, 10);
 
 	score = 0;
 	//Debug::SetRenderer(renderer);
@@ -97,6 +100,20 @@ GameB::~GameB() {
 }
 
 void GameB::UpdateGame(float dt) {
+	renderer->DrawString("Score: " + std::to_string(score), Vector2(10, 10), Vector4(1,0,0,1));
+
+	
+	timer += dt;
+	if (timer > 5)
+	{
+		NavigationGrid* grid = enemy->getGrid();
+		auto a = grid->getEmptyNodes();
+		AddPowerUpToWorld(a[rand() % (a.size()-1)] + Vector3(0,3,0));
+		AddPointToWorld(a[rand() % (a.size() - 1)] + Vector3(0, 3, 0));
+		timer = 0;
+
+	}
+
 	/*if (!inSelectionMode) {
 		world->GetMainCamera()->UpdateCamera(dt);
 	}*/
@@ -233,6 +250,28 @@ void GameB::LockedObjectMovement() {
 	}
 }
 
+void NCL::CSC8503::GameB::DisplayGrid()
+{
+	NavigationGrid* grid = enemy->getGrid();
+	auto a = grid->getEmptyNodes();
+	for (auto it = a.begin(); it != a.end(); it++)
+	{
+		AddSphereToWorld(*it + Vector3(0,2,0), 1, 0);
+	}
+	
+
+}
+
+void NCL::CSC8503::GameB::BuildWalls()
+{
+	NavigationGrid* grid = enemy->getGrid();
+	auto a = grid->getWallNodes();
+	for (auto it = a.begin(); it != a.end(); it++)
+	{
+		AddCubeToWorld(*it + Vector3(0, 2, 0), Vector3(9,10,9), 0);
+	}
+}
+
 void GameB::DebugObjectMovement() {
 	//If we've selected an object, we can manipulate it with some key presses
 	if (inSelectionMode && selectionObject) {
@@ -292,27 +331,40 @@ void GameB::InitWorld() {
 	//InitMixedGridWorld(5, 5, 3.5f, 3.5f);
 	//InitGameExamples();
 	InitDefaultFloor();
-	InitOne();
+	InitExamples();
 	AddPlayerToWorld();
 	AddEnemyToWorld();
 	player->SetEnemy(enemy);
 	enemy->SetPlayer(player);
+	//AddPowerUpToWorld(Vector3(20, 3, 20));
+	//AddPowerUpToWorld(Vector3(40, 3, 40));
+	//AddPointToWorld(Vector3(-20, 3, 20));
 	//CreateMap();
 	//BridgeConstraintTest();
 
 	//testStateObject = AddStateObjectToWorld(Vector3(0, 10, 0));
-
+	//DisplayGrid();
+	BuildWalls();
 }
 
-void NCL::CSC8503::GameB::InitOne()
+void NCL::CSC8503::GameB::InitExamples()
 {
 	float sphereRadius = 1.0f;
 
 	//GameObject* sphere = AddSphereToWorld(Vector3(0,5,0), sphereRadius);
-	GameObject* OBB1 = AddOBBToWorld(Vector3(0, 0.5, 0), Vector3(0, 0, 0), Vector3(1, 1, 1));
+	GameObject* OBB1 = AddOBBToWorld(Vector3(30, 0.5, 20), Vector3(0, 0, 0), Vector3(1, 1, 1));
 
-	GameObject* OBB2 = AddOBBToWorld(Vector3(0, 5, 0), Vector3(0, 0, 0), Vector3(1, 1, 1));
+	GameObject* OBB2 = AddOBBToWorld(Vector3(30, 5, 20), Vector3(0, 0, 0), Vector3(1, 1, 1));
 
+	GameObject* sphere1 = AddSphereToWorld(Vector3(15, 5, 30), 3, 1);
+	GameObject* sphere2 = AddSphereToWorld(Vector3(10, 5, 30), 3, 1);
+	PositionConstraint* constraint1 = new PositionConstraint(sphere1, sphere2, 10);
+	world->AddConstraint(constraint1);
+
+	GameObject* sphere3 = AddSphereToWorld(Vector3(15, 5, 40), 3, 1);
+	GameObject* sphere4 = AddSphereToWorld(Vector3(10, 5, 40), 3, 1);
+	SpringConstraint* constraint2 = new SpringConstraint(sphere3, sphere4, 10);
+	world->AddConstraint(constraint2);
 	//GameObject* OBB2 = AddSphereToWorld(Vector3(0, 5, 0), 1.0f);
 }
 
@@ -397,7 +449,7 @@ A single function to add a large immoveable cube to the bottom of our world
 GameObject* GameB::AddFloorToWorld(const Vector3& position) {
 	GameObject* floor = new GameObject();
 
-	Vector3 floorSize = Vector3(100, 2, 100);
+	Vector3 floorSize = Vector3(120, 2, 120);
 
 	floor->GetTransform()
 		.SetScale(floorSize * 2)
@@ -562,7 +614,7 @@ void GameB::InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float 
 }
 
 void GameB::InitDefaultFloor() {
-	AddFloorToWorld(Vector3(0, -2, 0));
+	AddFloorToWorld(Vector3(80, -2, 80));
 }
 
 
@@ -617,10 +669,10 @@ GameObject* NCL::CSC8503::GameB::AddPlayerToWorld()
 {
 	player = new Player(world, score);
 
-	std::cout << playerSpawn;
+	player->SetSpawn(playerSpawn);
 
 	player->GetTransform()
-		.SetScale(Vector3(3, 3, 3))
+		.SetScale(Vector3(8, 8, 8))
 		.SetPosition(playerSpawn + Vector3(0,2,0));
 
 	SphereVolume* volume = new SphereVolume(player->GetTransform());
@@ -628,7 +680,7 @@ GameObject* NCL::CSC8503::GameB::AddPlayerToWorld()
 
 	player->SetRenderObject(new RenderObject(&player->GetTransform(), sphereMesh, nullptr, basicShader));
 	player->SetPhysicsObject(new PhysicsObject(&player->GetTransform(), player->GetBoundingVolume()));
-
+	player->GetRenderObject()->SetColour(Vector4(1, 0, 0, 1));
 	player->GetPhysicsObject()->SetInverseMass(1.0f);
 	player->GetPhysicsObject()->InitSphereInertia();
 	player->GetPhysicsObject()->SetDamping(5);
@@ -640,10 +692,10 @@ GameObject* NCL::CSC8503::GameB::AddPlayerToWorld()
 GameObject* GameB::AddEnemyToWorld() {
 	enemy = new Enemy(powerUps);
 
-	std::cout << playerSpawn;
+	enemy->SetSpawn(enemySpawn);
 
 	enemy->GetTransform()
-		.SetScale(Vector3(3, 3, 3))
+		.SetScale(Vector3(8, 8, 8))
 		.SetPosition(enemySpawn + Vector3(0, 2, 0));
 
 	SphereVolume* volume = new SphereVolume(enemy->GetTransform());
@@ -654,7 +706,7 @@ GameObject* GameB::AddEnemyToWorld() {
 
 	enemy->GetPhysicsObject()->SetInverseMass(1.0f);
 	enemy->GetPhysicsObject()->InitSphereInertia();
-	enemy->GetPhysicsObject()->SetDamping(5);
+	enemy->GetPhysicsObject()->SetDamping(3);
 	world->AddGameObject(enemy);
 
 	return enemy;
@@ -666,7 +718,7 @@ GameObject* NCL::CSC8503::GameB::AddPointToWorld(const Vector3& position)
 
 
 	bonus->GetTransform()
-		.SetScale(Vector3(3, 3, 3))
+		.SetScale(Vector3(1, 1, 1))
 		.SetPosition(position);
 
 	SphereVolume* volume = new SphereVolume(bonus->GetTransform());
@@ -675,7 +727,7 @@ GameObject* NCL::CSC8503::GameB::AddPointToWorld(const Vector3& position)
 
 	bonus->SetRenderObject(new RenderObject(&bonus->GetTransform(), sphereMesh, nullptr, basicShader));
 	bonus->SetPhysicsObject(new PhysicsObject(&bonus->GetTransform(), bonus->GetBoundingVolume()));
-	bonus->GetRenderObject()->SetColour(Vector4(1, 1, 0, 0.6));
+	bonus->GetRenderObject()->SetColour(Vector4(1, 1, 0, 1));
 	bonus->GetPhysicsObject()->SetInverseMass(0.0f);
 	bonus->GetPhysicsObject()->InitSphereInertia();
 

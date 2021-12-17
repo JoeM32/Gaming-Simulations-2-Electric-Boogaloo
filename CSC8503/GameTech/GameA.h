@@ -62,6 +62,7 @@ namespace NCL {
 			GameObject* player;
 			Vector3 spawn;
 
+			//Vector3 spawns[] = { Vector3(20, 3, 20), Vector3(40, 3, 40),Vector3(20, 3, 20) };
 			bool useGravity;
 			bool inSelectionMode;
 

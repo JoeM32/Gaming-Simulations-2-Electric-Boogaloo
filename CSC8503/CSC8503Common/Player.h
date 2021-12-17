@@ -45,7 +45,7 @@ namespace NCL {
 			MovementState* normal;
 			MovementState* frozenState;
 			MovementState* confusedState;
-			MovementState* grapplestate;
+			//MovementState* grapplestate;
 
 			class MovementState
 			{
@@ -102,7 +102,7 @@ namespace NCL {
 				void Exit()override;
 			};
 
-			class Grapple : public MovementState
+			class Grapple : public MovementState //no time :( wanted to use springs and raycasts to pull ball around. temproary constraints are in effect for that reason
 			{
 			public:
 				Grapple(Player* player) : MovementState(player) {};
